@@ -113,9 +113,19 @@ export const TOUCHPOINTS = {
     agentName: 'Handover agent',
     pausedAgo: '14m ago',
     triggeredBy: 'automation',
-    previewNote: 'A watch turnover log was compiled from last night’s eastern section, ready to route to the oncoming watch supervisor once you approve the wording.',
+    previewNote: 'A watch turnover log was compiled from the eastern section, ready for supervisor review.',
     tabTitle: 'Turnover log draft',
-    map: { pins: BORDER_PINS, inset: BORDER_INSET },
+    content: {
+      type: 'log',
+      entries: [
+        { time: '2300', type: 'CHECK-IN', post: 'ES-1', note: 'On-time check-in, conditions normal' },
+        { time: '2345', type: 'WEATHER', post: 'All', note: 'Clear skies, visibility 10+ miles' },
+        { time: '0015', type: 'INCIDENT', post: 'ES-2', note: 'Equipment malfunction, maintenance notified' },
+        { time: '0100', type: 'CHECK-IN', post: 'ES-3', note: 'On-time check-in, perimeter secure' },
+        { time: '0200', type: 'PERSONNEL', post: 'ES-4', note: 'Relief rotation completed' },
+        { time: '0300', type: 'CHECK-IN', post: 'ES-2', note: 'Systems operational after maintenance' },
+      ],
+    },
     process: GENERIC_PROCESS('turnover'),
   },
   'sensor-sigint': {
