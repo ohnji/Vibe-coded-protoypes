@@ -1,0 +1,348 @@
+:root {
+  --bg: #14171c;
+  --panel: #1b1f26;
+  --card: #21262e;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8eaed;
+  --text-dim: #9aa2ad;
+  --accent: #2d72d2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---------- Icon rail ---------- */
+
+.rail {
+  width: 60px;
+  flex: none;
+  background: #0b0d10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  gap: 10px;
+  border-right: 1px solid var(--border);
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+}
+
+.icon-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e6a23c;
+}
+
+.rail-divider {
+  width: 22px;
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.rail-spacer { flex: 1; }
+
+.icon-btn.chip {
+  color: white;
+}
+
+.chip.chip-blue { background: rgba(45,114,210,0.35); }
+.chip.chip-purple { background: rgba(145,121,242,0.3); }
+.chip.chip-green { background: rgba(76,175,80,0.28); }
+.chip.chip-orange { background: rgba(230,162,60,0.28); }
+
+.icon-btn.chip.active {
+  outline: 1px solid rgba(255,255,255,0.4);
+}
+
+.rail-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.rail-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rail-user-tag {
+  font-size: 9px;
+  font-weight: 600;
+  color: white;
+  background: #c0392b;
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Main content ---------- */
+
+.content {
+  flex: 1;
+  padding: 40px 48px 56px;
+  max-width: 1140px;
+  margin: 0 auto;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 44px;
+}
+
+.logo-mark {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  color: var(--text);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.prompt-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.prompt-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.prompt-box {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+#prompt-input {
+  width: 100%;
+  min-height: 96px;
+  resize: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 18px 60px 18px 20px;
+  font-size: 14px;
+  font-family: inherit;
+  background: white;
+  color: #111;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+#prompt-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.submit-btn {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submit-btn:hover { background: #245ba8; }
+
+.hint {
+  min-height: 18px;
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.banner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(45,114,210,0.12);
+  border: 1px solid rgba(45,114,210,0.3);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 36px;
+  font-size: 13px;
+  color: #cfe0f7;
+}
+
+.banner-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin-top: 1px;
+  fill: none;
+  stroke: #8abbff;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.banner strong { color: white; margin-right: 6px; }
+
+.banner-link {
+  color: #8abbff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.banner-link:hover { text-decoration: underline; }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+
+.card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.card li:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.dot {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dot-purple { background: rgba(145,121,242,0.18); color: #b9a7f7; }
+.dot-orange { background: rgba(230,126,34,0.18); color: #e69a5c; }
+.dot-blue { background: rgba(45,114,210,0.18); color: #8abbff; }
+.dot-lime { background: rgba(212,241,126,0.18); color: #d4f17e; }
+
+.ext {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .content { padding: 24px; }
+}

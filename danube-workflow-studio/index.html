@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danube-Staging — Landing</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <main class="content">
+      <header class="app-header">
+        <div class="logo-mark">◎</div>
+        <div>
+          <h1>Danube-Staging</h1>
+          <p class="tagline">The Operating System for Global Decision Making</p>
+        </div>
+      </header>
+
+      <section class="prompt-section">
+        <h2>What do you want to do today?</h2>
+        <form class="prompt-box" id="prompt-form">
+          <textarea id="prompt-input" placeholder="Ask a question, summarize a document, or describe a task...">I need help resolving a customer escalation about a delayed shipment.</textarea>
+          <button type="submit" class="submit-btn" aria-label="Submit">↵</button>
+        </form>
+        <p class="hint" id="prompt-hint"></p>
+      </section>
+
+      <section class="workflow-section">
+        <h3 class="section-label">In progress</h3>
+        <div class="progress-grid">
+          <div class="progress-card" data-title="Support request resolution" data-resume="1">
+            <h4>Support request resolution</h4>
+            <p class="progress-sub">Ticket #48213</p>
+            <span class="running-pill">Agent running...</span>
+          </div>
+          <div class="progress-card" data-title="Refund exception review" data-resume="3">
+            <h4>Refund exception review</h4>
+            <p class="progress-sub">Ticket #48390</p>
+            <span class="running-pill">Agent running...</span>
+          </div>
+          <div class="progress-card" data-title="Customer onboarding — Acme Corp" data-resume="0">
+            <h4>Customer onboarding — Acme Corp</h4>
+            <p class="progress-sub">Setup checklist</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow-section">
+        <h3 class="section-label">Start a new workflow</h3>
+        <div class="template-grid">
+          <div class="template-card" data-query="I need help resolving a customer escalation about a delayed shipment.">
+            <h4>Support request resolution</h4>
+            <ul class="template-meta">
+              <li><span class="dot">✦</span>Triage agent, Research agent, Drafting agent +1</li>
+              <li><span class="dot">◇</span>Ticketing, CRM, Knowledge base</li>
+            </ul>
+          </div>
+          <div class="template-card" data-query="A customer wants a refund outside our standard return window.">
+            <h4>Refund &amp; exception handling</h4>
+            <ul class="template-meta">
+              <li><span class="dot">✦</span>Triage agent, Policy agent, Drafting agent +1</li>
+              <li><span class="dot">◇</span>Billing, CRM, Policy docs</li>
+            </ul>
+          </div>
+          <div class="template-card" data-query="Walk a new enterprise customer through setup and configuration.">
+            <h4>Customer onboarding walkthrough</h4>
+            <ul class="template-meta">
+              <li><span class="dot">✦</span>Onboarding agent, Research agent, Drafting agent +1</li>
+              <li><span class="dot">◇</span>CRM, Onboarding tool, Docs</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

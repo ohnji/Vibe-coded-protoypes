@@ -1,0 +1,13 @@
+# Dependencies
+**/node_modules/
+
+# Build output (docs/ is the published Pages site and IS committed)
+**/dist/
+**/.vite/
+
+# OS / editor
+.DS_Store
+**/.DS_Store
+
+# Large screen recordings (too big for the repo)
+*.mov

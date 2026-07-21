@@ -1,0 +1,369 @@
+.ws-split {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.ws-canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ws-side {
+  width: 380px;
+  flex: none;
+  border-left: 1px solid rgba(255,255,255,0.15);
+  background: #050506;
+  padding: 24px 20px;
+  overflow-y: auto;
+}
+
+.ws-side-title {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ws-side-tabs {
+  display: flex;
+  gap: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.ws-side-tab {
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ws-side-tab.active {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ws-side-tab .count {
+  font-size: 11px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.ws-panel { display: none; }
+.ws-panel.active { display: block; }
+
+.ws-steps, .ws-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ws-step, .ws-list-item {
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.ws-list-item {
+  color: var(--text);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.ws-step.active,
+.ws-step.done {
+  color: var(--text);
+  border-color: rgba(255,255,255,0.9);
+}
+
+.step-spinner {
+  display: none;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: var(--accent);
+}
+
+.ws-step.active .step-spinner {
+  display: block;
+  animation: ws-spin 0.8s linear infinite;
+}
+
+@keyframes ws-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Stream cards in the main canvas ---------- */
+
+.stream-card {
+  max-width: 720px;
+  margin: 0 auto 28px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  padding: 18px 20px;
+  background: #0a0a0a;
+}
+
+.stream-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stream-icon {
+  font-size: 15px;
+}
+
+.stream-card-header h5 {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.expand-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.expand-btn:hover { color: var(--text); }
+
+.content-skel {
+  height: 12px;
+  border-radius: 4px;
+  background: rgba(246,247,249,0.1);
+  margin-bottom: 10px;
+}
+
+.content-skel:last-child { margin-bottom: 0; }
+
+/* Ticket card */
+.app-card {
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  background: #14171c;
+  padding: 18px;
+}
+
+.app-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.ticket-id {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.ticket-subject {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.pill-high {
+  background: rgba(230,76,60,0.15);
+  color: #e6644c;
+  border: 1px solid rgba(230,76,60,0.35);
+}
+
+.ticket-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field-value {
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* Research cards */
+.research-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.research-item {
+  font-size: 13px;
+  color: #d5d9e0;
+  line-height: 1.5;
+}
+
+/* Resolution options */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.option-card {
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  background: #14171c;
+  padding: 16px;
+}
+
+.option-card.recommended {
+  border-color: var(--accent);
+  background: rgba(45,114,210,0.08);
+}
+
+.option-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  background: var(--accent);
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.option-card h5 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.option-card p {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #abb3bf;
+}
+
+.option-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.btn-reject, .btn-confirm {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-reject {
+  background: #dc7633;
+  color: #2b1400;
+}
+
+.btn-confirm {
+  background: #27ae60;
+  color: #062910;
+}
+
+.btn-reject:disabled, .btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.confirmed-tag {
+  font-size: 12px;
+  color: #6fd897;
+}
+
+/* Execution plan checklist */
+.checklist-card {
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  background: #14171c;
+  padding: 6px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  font-size: 14px;
+  color: var(--text);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.checklist-item:last-child {
+  border-bottom: none;
+}
+
+.check-circle {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: 50%;
+  background: #4caf50;
+  color: #06210a;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .ws-split { flex-direction: column; }
+  .ws-side { width: auto; border-left: none; border-top: 1px solid rgba(255,255,255,0.15); }
+  .options-grid { grid-template-columns: 1fr; }
+}

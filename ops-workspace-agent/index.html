@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ops Center — Workspace Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=4">
+</head>
+<body>
+
+  <!-- ============ HOME VIEW ============ -->
+  <div class="app" id="view-home">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-row">
+          <div class="pg-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 15V5a1 1 0 0 1 1-1h6a5 5 0 0 1 0 10H7v5z"/></svg>
+          </div>
+          <div class="brand-actions">
+            <button class="icon-btn ghost small" type="button" data-toast="New" aria-label="New">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <button class="icon-btn ghost small" type="button" data-toast="Collapse sidebar" aria-label="Collapse sidebar">
+              <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <nav class="nav-section">
+          <button class="nav-item active" type="button">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg></span>
+            <span class="nav-label">Home</span>
+          </button>
+          <button class="nav-item" type="button" data-toast="Search is not available in this prototype">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+            <span class="nav-label">Search</span>
+          </button>
+          <button class="nav-item" type="button" data-toast="Ontology is not available in this prototype">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12v9"/><path d="M4 7.5l8 4.5 8-4.5"/></svg></span>
+            <span class="nav-label">Ontology</span>
+          </button>
+          <button class="nav-item" type="button" data-toast="Files is not available in this prototype">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg></span>
+            <span class="nav-label">Files</span>
+          </button>
+          <button class="nav-item" type="button" data-toast="No new notifications">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10z"/><path d="M10 18a2 2 0 0 0 4 0"/></svg></span>
+            <span class="nav-label">Notifications</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-head"><span class="head-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg></span><span>Teams</span></div>
+        <button class="team-item" type="button" data-toast="Opening 18th Logistics Group">
+          <span class="team-badge"><svg viewBox="0 0 24 24"><path d="M6 4v16"/><path d="M6 4h11l-2.5 3.5L17 11H6"/></svg></span>
+          <span>18th Logistics Group</span>
+        </button>
+        <button class="team-item" type="button" data-toast="Opening 82nd Support Wing">
+          <span class="team-badge"><svg viewBox="0 0 24 24"><path d="M6 4v16"/><path d="M6 4h11l-2.5 3.5L17 11H6"/></svg></span>
+          <span>82nd Support Wing</span>
+        </button>
+        <button class="team-item" type="button" data-toast="Opening Ops Center">
+          <span class="team-badge"><svg viewBox="0 0 24 24"><path d="M6 4v16"/><path d="M6 4h11l-2.5 3.5L17 11H6"/></svg></span>
+          <span>Ops Center</span>
+        </button>
+      </div>
+
+      <div class="sidebar-section grow">
+        <div class="section-head">
+          <span class="head-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></span>
+          <span>Workspaces</span>
+          <button class="text-btn push-right" type="button" data-toast="New workspace" aria-label="New workspace">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+
+        <div class="ws-subhead">Favorites</div>
+        <div class="workspaces" id="workspaces">
+          <button class="ws-item" type="button" id="ws-watch-schedule" data-ws="watch-schedule">
+            <span class="ws-title">Watch Schedule - 82nd</span>
+            <span class="tag tag-orange">3</span>
+          </button>
+          <button class="ws-item" type="button" data-toast="Opening &quot;Shift Handover Log_KE&quot;">
+            <span class="ws-title">Shift Handover Log_KE</span>
+            <span class="tag tag-orange">3</span>
+          </button>
+          <button class="ws-item" type="button" data-toast="Opening &quot;Maintenance Tracking &amp; Compliance_KE&quot;">
+            <span class="ws-title">Maintenance Tracking &amp; Compliance_KE</span>
+            <svg class="ws-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/></svg>
+          </button>
+          <button class="ws-item" type="button" data-toast="Opening &quot;Weekly readiness brief prep_KE&quot;">
+            <span class="ws-title">Weekly readiness brief prep_KE</span>
+            <svg class="ws-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/></svg>
+          </button>
+        </div>
+
+        <div class="ws-subhead">Recents</div>
+        <div class="workspaces">
+          <button class="ws-item" type="button" data-toast="Opening &quot;Sector 4 Overview&quot;">
+            <span class="ws-title">Sector 4 Overview</span>
+          </button>
+          <button class="ws-item" type="button" data-toast="Opening &quot;Staffing questions&quot;">
+            <span class="ws-title">Staffing questions</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-head"><span class="head-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></span><span>Apps</span></div>
+        <button class="app-item" type="button" data-toast="Opening Gaia">
+          <span class="app-badge app-badge-blue"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5a13 13 0 0 1 0 17"/><path d="M12 3.5a13 13 0 0 0 0 17"/></svg></span>
+          <span>Gaia</span>
+        </button>
+        <button class="app-item" type="button" data-toast="Opening Workbench">
+          <span class="app-badge app-badge-maroon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span>Workbench</span>
+        </button>
+        <button class="app-item" type="button" data-toast="Opening Chat">
+          <span class="app-badge app-badge-dark"><svg viewBox="0 0 24 24"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4z"/></svg></span>
+          <span>Chat</span>
+        </button>
+
+        <div class="section-head sub"><span class="head-icon"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg></span><span>Files</span></div>
+        <button class="app-item" type="button" data-toast="Opening Regional COP">
+          <span class="app-badge app-badge-blue small"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5a13 13 0 0 1 0 17"/><path d="M12 3.5a13 13 0 0 0 0 17"/></svg></span>
+          <span>Regional COP</span>
+        </button>
+        <button class="app-item" type="button" data-toast="Opening Equipment Readiness">
+          <span class="app-badge app-badge-red small"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+          <span>Equipment Readiness</span>
+        </button>
+        <button class="app-item" type="button" data-toast="Opening Support Coverage Matrix">
+          <span class="app-badge app-badge-blue small"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="10.5" y1="10" x2="10.5" y2="20.5"/></svg></span>
+          <span>Support Coverage Matrix</span>
+        </button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="account-row">
+          <span class="avatar">AS</span>
+          <span>Alex Smith</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="home-main">
+      <div class="bg-decor"></div>
+      <div class="home-content">
+        <h1>What is on your mind?</h1>
+
+        <form class="prompt-card" id="prompt-form">
+          <textarea id="prompt-input" placeholder="Type the question you have today" rows="1"></textarea>
+          <div class="prompt-controls">
+            <div class="tool-icons">
+              <button type="button" class="tool-btn active" aria-label="All tools" aria-pressed="true">
+                <svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.3 4.6L4 16.3V20h3.7l5.4-5.4a4 4 0 0 0 4.6-5.3l-2.6 2.6-2-2z"/></svg>
+              </button>
+              <button type="button" class="tool-btn" aria-label="Manual mode" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h9v16H6a2 2 0 0 0-2 2z"/><path d="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2h-3z"/></svg>
+              </button>
+              <button type="button" class="tool-btn" aria-label="Voice input" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+              </button>
+              <button type="button" class="tool-btn" aria-label="More tools" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+            <div class="prompt-right">
+              <div class="model-select-wrap">
+                <button type="button" class="model-select" id="model-select" aria-haspopup="listbox" aria-expanded="false">
+                  <span id="model-select-label">Claude 4.5 Sonnet</span>
+                  <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <ul class="model-menu" id="model-menu" role="listbox" hidden>
+                  <li role="option" data-model="Claude 4.5 Sonnet">Claude 4.5 Sonnet</li>
+                  <li role="option" data-model="Claude Opus 4.5">Claude Opus 4.5</li>
+                  <li role="option" data-model="Claude Haiku 4.5">Claude Haiku 4.5</li>
+                </ul>
+              </div>
+              <button type="submit" class="send-btn" aria-label="Send">
+                <svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6z"/><path d="M20 4L11 13"/></svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <section class="suggestions">
+          <div class="suggestions-head">
+            <h2>Suggestions</h2>
+            <button class="text-link" type="button" data-toast="More suggestions coming soon">View all</button>
+          </div>
+          <div class="suggestion-grid">
+            <article class="suggestion-card" data-suggestion="Ideate coverage options and generate an executable watch schedule.">
+              <h3>Watch planning</h3>
+              <p>Ideate coverage options and generate an executable watch schedule.</p>
+              <div class="suggestion-meta">
+                <div class="meta-row">
+                  <span class="meta-icon-tile purple" aria-hidden="true">◆</span>
+                  <span>Hivemind,</span>
+                  <span class="meta-icon-inline" aria-hidden="true">✦</span>
+                  <span>Maverick plan</span>
+                </div>
+                <div class="meta-row muted">
+                  <svg class="meta-link-icon" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>
+                  <span>Ideation agent, Maverick Assist</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="suggestion-card" data-suggestion="Dive deeper into reports and track updates.">
+              <h3>Incident review</h3>
+              <p>Dive deeper into reports and track updates</p>
+              <div class="suggestion-meta">
+                <div class="meta-row">
+                  <span class="app-badge app-badge-teal small">
+                    <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>
+                  </span>
+                  <span>Case Hub</span>
+                </div>
+                <div class="meta-row muted">
+                  <svg class="meta-link-icon" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>
+                  <span>AIP Analyst, Notepad Assist, Vertex Assist</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="suggestion-card" data-suggestion="Supervisor view for Ops Center readiness.">
+              <h3>Monitor readiness</h3>
+              <p>Supervisor view for Ops Center</p>
+              <div class="suggestion-meta">
+                <div class="meta-row">
+                  <span class="meta-icon-tile" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="16" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/></svg>
+                  </span>
+                  <span>Ops Center COP</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon-tile" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="16" rx="1"/><rect x="13" y="4" width="7" height="16" rx="1"/></svg>
+                  </span>
+                  <span>Ops Center Overview</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon-tile purple" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="1"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                  </span>
+                  <span>Ops Center Logistics tracker</span>
+                </div>
+                <div class="meta-row muted">
+                  <svg class="meta-link-icon" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>
+                  <span>Gaia Assist, AIP Analyst, Ask Ops Center</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Hover preview popover for workspace items -->
+  <div class="ws-popover" id="ws-popover" hidden>
+    <div class="ws-popover-title">Watch Schedule - 82nd</div>
+    <div class="ws-popover-label">Summary of what happened</div>
+    <p class="ws-popover-text">Since your last visit, <strong>3 shifts</strong> advanced through the workflow. WS-0031 completed the relief checklist and is awaiting OOD sign-off. WS-0047 was flagged by the automated coverage check — its handover exceeded the allotted time and requires your review before it can proceed to CONFIRM COVERAGE. WS-0055 had its turnover checklist completed by the watch team and moved into LOG REVIEW.</p>
+    <div class="ws-popover-stats">
+      <span class="stat stat-warn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="16.3" r="0.6" fill="currentColor" stroke="none"/></svg>3 needs review</span>
+      <span class="stat"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg>50 running</span>
+      <span class="stat"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>5 completed</span>
+    </div>
+  </div>
+
+  <!-- ============ WORKSPACE VIEW ============ -->
+  <div class="workspace" id="view-workspace" hidden>
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">
+        <span class="win-dot win-dot-red"></span>
+        <span class="win-dot win-dot-yellow"></span>
+        <span class="win-dot win-dot-green"></span>
+        <button class="icon-btn ghost small" id="ws-back" type="button" aria-label="Back to home">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="10" y1="4" x2="10" y2="20"/></svg>
+        </button>
+        <button class="icon-btn ghost small" type="button" data-toast="No back history" aria-label="Back">
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button class="icon-btn ghost small" type="button" data-toast="No forward history" aria-label="Forward">
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <button class="win-title" type="button" data-toast="Workspace switcher is not available in this prototype">
+        Watch Schedule - 82nd
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="win-titlebar-right">
+        <div class="avatar-stack">
+          <span class="avatar-chip avatar-purple">TK</span>
+          <span class="avatar-chip avatar-gold">IE</span>
+          <span class="avatar-chip avatar-red">JD</span>
+        </div>
+        <button class="icon-btn ghost small" type="button" data-toast="No new notifications" aria-label="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10z"/><path d="M10 18a2 2 0 0 0 4 0"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-bar-left">
+        <button class="branch-select" type="button" data-toast="Branch switcher is not available in this prototype">
+          <svg viewBox="0 0 24 24" class="bolt"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>
+          June 1 update
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="tab-bar-left-actions">
+          <button class="icon-btn ghost small" type="button" data-toast="New tab" aria-label="New tab"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="icon-btn ghost small" type="button" data-toast="Tab list" aria-label="Tab list"><svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" type="button">
+          <svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
+          Watch Board
+        </button>
+        <button class="tab" type="button" data-toast="Watch Bill is not available in this prototype">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/></svg>
+          Watch Bill
+        </button>
+        <button class="tab" type="button" data-toast="Handover Log is not available in this prototype">
+          <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="10.5" y1="10" x2="10.5" y2="20.5"/></svg>
+          Handover Log
+          <span class="tab-close">&times;</span>
+        </button>
+        <button class="icon-btn ghost small tab-add" type="button" data-toast="New tab" aria-label="New tab"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+    </div>
+
+    <div class="ws-body">
+      <aside class="icon-rail">
+        <button class="rail-btn active" type="button" aria-label="Agent panel"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></button>
+        <button class="rail-btn" type="button" data-toast="Inbox is not available in this prototype" aria-label="Inbox"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h4l2 3h4l2-3h4"/></svg></button>
+        <button class="rail-btn" type="button" data-toast="Activity is not available in this prototype" aria-label="Activity"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 7 6-14 2 7h4"/></svg></button>
+        <button class="rail-btn" type="button" data-toast="Files is not available in this prototype" aria-label="Files"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg></button>
+        <button class="rail-btn" type="button" data-toast="Settings are not available in this prototype" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg></button>
+      </aside>
+
+      <section class="agent-panel">
+        <div class="agent-welcome" id="agent-welcome">
+          <div class="agent-name"><svg class="bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>Watch Schedule - 82nd Agent</div>
+          <p class="agent-msg">Welcome back Alex, here's what happened while you were away.</p>
+          <ul class="agent-list">
+            <li><a href="#" class="ws-link" data-toast="Opening WS-0031">WS-0031</a> completed the relief checklist and is the leading item awaiting OOD sign-off.</li>
+            <li><a href="#" class="ws-link" data-toast="Opening WS-0047">WS-0047</a> underperformed against the standard handover window — the agent logged a note flagging the delay.</li>
+            <li>The Coverage Agent auto-flagged the 0400&ndash;0800 block after staffing fell below the minimum threshold.</li>
+          </ul>
+          <p class="agent-msg">The following items needs your review</p>
+          <div class="review-items">
+            <button class="review-item" type="button" data-toast="Opening weather station review">
+              <span class="review-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="2.6 3.2"/></svg></span>
+              <span class="review-body">
+                <span class="review-title">New weather station offline at Site 2, review before CONFIRM COVERAGE</span>
+                <span class="review-meta">Coverage Check Workflow &middot; Paused 50m ago &middot; Triggered by&hellip;</span>
+              </span>
+              <span class="review-dot"></span>
+            </button>
+            <button class="review-item" type="button" data-toast="Opening equipment report">
+              <span class="review-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="2.6 3.2"/></svg></span>
+              <span class="review-body">
+                <span class="review-title">Equipment report ready for your review</span>
+                <span class="review-meta">Relief Checklist Workflow &middot; Paused 50m ago &middot; Triggered by&hellip;</span>
+              </span>
+              <span class="review-dot"></span>
+            </button>
+            <button class="review-item" type="button" data-toast="Opening coverage gap">
+              <span class="review-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="2.6 3.2"/></svg></span>
+              <span class="review-body">
+                <span class="review-title">Coverage gap flagged for 0400&ndash;0800 block. Ready for your review</span>
+                <span class="review-meta">Coverage Check Workflow &middot; Paused 50m ago &middot; Triggered by&hellip;</span>
+              </span>
+              <span class="review-dot"></span>
+            </button>
+          </div>
+        </div>
+
+        <form class="agent-input-row" id="agent-form">
+          <textarea id="agent-input" placeholder="Ask the workspace agent&hellip;" rows="1"></textarea>
+          <div class="agent-input-controls">
+            <div class="tool-icons">
+              <button type="button" class="tool-btn" data-toast="Attach" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+              <button type="button" class="tool-btn" data-toast="Tools" aria-label="Tools"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.3 4.6L4 16.3V20h3.7l5.4-5.4a4 4 0 0 0 4.6-5.3l-2.6 2.6-2-2z"/></svg></button>
+            </div>
+            <div class="prompt-right">
+              <div class="model-select-wrap">
+                <button type="button" class="model-select small">Claude 3.7 Sonnet<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+              </div>
+              <button type="submit" class="send-btn" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6z"/><path d="M20 4L11 13"/></svg></button>
+            </div>
+          </div>
+          <div class="agent-input-hint"><span><kbd>&#8629;</kbd> send</span><span><kbd>&#8679;&#8629;</kbd> new line</span></div>
+        </form>
+      </section>
+
+      <section class="board" id="board">
+        <div class="board-col" data-col="reported">
+          <div class="col-head">
+            <span class="col-diamond diamond-purple"></span>
+            <span class="col-title">REPORTED</span>
+            <span class="tag tag-neutral">3</span>
+            <button class="icon-btn ghost small push-right" type="button" data-toast="Collapse column" aria-label="Collapse column"><svg viewBox="0 0 24 24"><path d="M8 4l-4 8 4 8"/><path d="M16 4l4 8-4 8"/></svg></button>
+          </div>
+          <div class="cat-head"><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg><span>Category Name</span><span class="tag tag-neutral push-right">2</span></div>
+          <div class="card" data-ws="WS-0031" data-kind="RELIEF CHECKLIST">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0031 / <strong>RELIEF CHECKLIST</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0036" data-kind="EQUIPMENT CHECK">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0036 / <strong>EQUIPMENT CHECK</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="cat-head"><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg><span>Category Name</span><span class="tag tag-neutral push-right">1</span></div>
+          <div class="card" data-ws="WS-0036" data-kind="EQUIPMENT CHECK">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0036 / <strong>EQUIPMENT CHECK</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+        </div>
+
+        <div class="board-col" data-col="triaged">
+          <div class="col-head">
+            <span class="col-diamond diamond-orange"></span>
+            <span class="col-title">TRIAGED</span>
+            <span class="tag tag-neutral">5</span>
+            <button class="icon-btn ghost small push-right" type="button" data-toast="Collapse column" aria-label="Collapse column"><svg viewBox="0 0 24 24"><path d="M8 4l-4 8 4 8"/><path d="M16 4l4 8-4 8"/></svg></button>
+          </div>
+          <div class="cat-head"><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg><span>Category Name</span><span class="tag tag-neutral push-right">2</span></div>
+          <div class="card" data-ws="WS-0041" data-kind="HANDOVER LOG">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0041 / <strong>HANDOVER LOG</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0047" data-kind="COVERAGE CHECK">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0047 / <strong>COVERAGE CHECK</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="cat-head"><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg><span>Category Name</span><span class="tag tag-neutral push-right">3</span></div>
+          <div class="card" data-ws="WS-0052" data-kind="RELIEF CHECKLIST">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0052 / <strong>RELIEF CHECKLIST</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0058" data-kind="COVERAGE GAP">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0058 / <strong>COVERAGE GAP</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0052" data-kind="RELIEF CHECKLIST">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0052 / <strong>RELIEF CHECKLIST</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+        </div>
+
+        <div class="board-col" data-col="inprogress">
+          <div class="col-head">
+            <span class="col-diamond diamond-red"></span>
+            <span class="col-title">IN PROGRESS</span>
+            <span class="tag tag-neutral">4</span>
+            <button class="icon-btn ghost small push-right" type="button" data-toast="Collapse column" aria-label="Collapse column"><svg viewBox="0 0 24 24"><path d="M8 4l-4 8 4 8"/><path d="M16 4l4 8-4 8"/></svg></button>
+          </div>
+          <div class="cat-head"><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg><span>Category Name</span><span class="tag tag-neutral push-right">4</span></div>
+          <div class="card" data-ws="WS-0031" data-kind="RELIEF CHECKLIST">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0031 / <strong>RELIEF CHECKLIST</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0063" data-kind="LOG REVIEW">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0063 / <strong>LOG REVIEW</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0067" data-kind="SIGN-OFF PENDING">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0067 / <strong>SIGN-OFF PENDING</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0071" data-kind="TURNOVER REVIEW">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0071 / <strong>TURNOVER REVIEW</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+        </div>
+
+        <div class="board-col" data-col="pending">
+          <div class="col-head">
+            <span class="col-diamond diamond-darkred"></span>
+            <span class="col-title">PENDING SIGN-OFF</span>
+            <span class="tag tag-neutral">2</span>
+            <button class="icon-btn ghost small push-right" type="button" data-toast="Collapse column" aria-label="Collapse column"><svg viewBox="0 0 24 24"><path d="M8 4l-4 8 4 8"/><path d="M16 4l4 8-4 8"/></svg></button>
+          </div>
+          <div class="cat-head"><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg><span>Category Name</span><span class="tag tag-neutral push-right">2</span></div>
+          <div class="card" data-ws="WS-0031" data-kind="RELIEF CHECKLIST">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0031 / <strong>RELIEF CHECKLIST</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+          <div class="card" data-ws="WS-0063" data-kind="LOG REVIEW">
+            <span class="card-icon">&#11041;</span>
+            <span class="card-body"><span class="card-title">WS-0063 / <strong>LOG REVIEW</strong></span><span class="card-meta">Last updated 6 min ago</span></span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="status-bar">
+      <button class="status-item" type="button" data-toast="Agent activities log is not available in this prototype">
+        <svg viewBox="0 0 24 24"><path d="M3 12h4l2 7 6-14 2 7h4"/></svg>
+        Agent activities
+      </button>
+      <div class="agent-pills">
+        <button class="pill" type="button" data-toast="Planning agent">Planning agent</button>
+        <button class="pill active" type="button" data-toast="Ideation agent">Ideation agent</button>
+        <button class="pill" type="button" data-toast="Research agent">Research agent</button>
+        <button class="pill" type="button" data-toast="Report writer">Report writer</button>
+        <button class="pill" type="button" data-toast="Investigator">Investigator</button>
+      </div>
+      <div class="status-right">
+        <span class="status-count warn">0</span>
+        <span class="status-count info">1</span>
+        <span class="status-count ok">0</span>
+        <button class="text-btn" type="button" data-toast="Agent manager is not available in this prototype">Open agent manager</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right-click context menu for kanban cards -->
+  <div class="ctx-menu" id="ctx-menu" hidden>
+    <button type="button" data-action="ask"><span>Ask workspace agent</span><kbd>⌘I</kbd></button>
+    <button type="button" data-action="inspect"><span>Inspect</span><kbd>⌘⇧I</kbd></button>
+    <div class="ctx-sep"></div>
+    <button type="button" data-action="gaia"><span>Open in Gaia</span><kbd>⌘G</kbd></button>
+    <button type="button" data-action="copy"><span>Copy link</span><kbd>⌘C</kbd></button>
+    <button type="button" data-action="share"><span>Share with&hellip;</span><kbd>⌘⇧S</kbd></button>
+  </div>
+
+  <!-- Floating contextual "ask agent" popup -->
+  <div class="ask-popup" id="ask-popup" hidden>
+    <div class="ask-popup-head"><svg class="bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg><span id="ask-popup-title">Watch Schedule - 82nd Agent</span></div>
+    <form id="ask-popup-form">
+      <textarea id="ask-popup-input" rows="2"></textarea>
+      <button type="submit" class="ask-send" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6z"/><path d="M20 4L11 13"/></svg></button>
+    </form>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon">✓</span>
+    <span id="toast-text"></span>
+  </div>
+
+  <script src="script.js?v=2"></script>
+</body>
+</html>

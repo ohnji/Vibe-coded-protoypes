@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danube-Staging — New workflow</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="shell.css">
+<link rel="stylesheet" href="workflow.css">
+</head>
+<body class="shell-body">
+  <div class="ide-shell">
+    <aside class="ide-rail">
+      <a href="index.html" class="ide-rail-logo" aria-label="Back to home">◎</a>
+    </aside>
+    <div class="ide-main">
+      <div class="ide-tabbar">
+        <div class="ide-tab">
+          <span>New workflow</span>
+          <button class="ide-tab-close" onclick="window.location.href='index.html'" aria-label="Close tab">×</button>
+        </div>
+      </div>
+
+      <div class="ide-body" id="wf-body">
+        <div class="quoted-msg" id="query-quote">Loading query...</div>
+        <div id="wf-stream"></div>
+      </div>
+
+      <form class="composer" id="composer-form">
+        <textarea id="composer-input" placeholder="Ask a follow-up..." rows="1"></textarea>
+        <button type="submit" class="submit-btn" aria-label="Send">↵</button>
+      </form>
+    </div>
+  </div>
+
+  <template id="agent-recommendation-tpl">
+    <h3 class="section-title">Recommended workflow</h3>
+    <section class="wf-card">
+      <div class="wf-summary">
+        <h4>Support request resolution</h4>
+        <p class="wf-desc">
+          This workflow triages the request, drafts a resolution plan, and routes it for
+          execution across your connected tools — matched from workflows your team has run before.
+        </p>
+        <ul class="wf-meta">
+          <li><span class="dot">▦</span>Ticketing, CRM, Knowledge base</li>
+          <li><span class="dot">◇</span>Customers, Tickets, Articles</li>
+          <li><span class="dot">✦</span>Ideation agent, Critic agent, Problem solver...</li>
+          <li><span class="dot">🕐</span>~20 min</li>
+        </ul>
+      </div>
+
+      <div class="wf-overview">
+        <h5>Workflow overview</h5>
+        <div class="stage-row">
+          <div class="stage-card">
+            <h6>Ideation</h6>
+            <p class="stage-tag"><span class="dot">✦</span>Ideation agent +2</p>
+            <p class="stage-tag"><span class="dot">↳</span>Idea objects</p>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div class="stage-arrow">→</div>
+          <div class="stage-card">
+            <h6>Proposal</h6>
+            <p class="stage-tag"><span class="dot">✦</span>Critic agent +2</p>
+            <p class="stage-tag"><span class="dot">↳</span>Draft plan</p>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div class="stage-arrow">→</div>
+          <div class="stage-card">
+            <h6>Execute</h6>
+            <p class="stage-tag"><span class="dot">✦</span>Problem solver +2</p>
+            <p class="stage-tag"><span class="dot">↳</span>Resolution plan</p>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="start-btn" id="start-btn">▶ Start the workflow</button>
+    </section>
+  </template>
+
+  <script src="workflow.js"></script>
+</body>
+</html>

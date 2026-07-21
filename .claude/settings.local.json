@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__614e621b-f0ce-43fa-aa69-065a0bc71336__get_design_context",
+      "mcp__614e621b-f0ce-43fa-aa69-065a0bc71336__get_metadata",
+      "mcp__614e621b-f0ce-43fa-aa69-065a0bc71336__whoami",
+      "Bash(open \"/Users/jiyoung/Desktop/Portfolio files/Vibe coded prototypes/danube-workflow-studio/index.html\")",
+      "mcp__614e621b-f0ce-43fa-aa69-065a0bc71336__get_screenshot",
+      "mcp__614e621b-f0ce-43fa-aa69-065a0bc71336__download_assets",
+      "Bash(curl -sL -o bg-texture.jpeg \"https://www.figma.com/api/mcp/asset/c52eab6c-22fe-46f9-934e-6f79ad5f8e23\")",
+      "Bash(curl -sL -o avatar-91172.jpeg \"https://www.figma.com/api/mcp/asset/1feb72be-b42c-47cd-9791-198c0e2d01be\")",
+      "Bash(curl -sL -o icon-raw.png \"https://www.figma.com/api/mcp/asset/23e1e120-03a3-4594-9af4-8ee5266d9f06\")",
+      "Bash(file *)"
+    ]
+  }
+}

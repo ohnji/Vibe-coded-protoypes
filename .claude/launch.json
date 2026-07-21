@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "agent-studio-landing",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "agent-studio-landing"],
+      "port": 4173,
+      "autoPort": true
+    },
+    {
+      "name": "danube-workflow-studio",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "danube-workflow-studio"],
+      "port": 4174,
+      "autoPort": true
+    },
+    {
+      "name": "agent-studio-artifacts",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "agent-studio-artifacts"],
+      "port": 4175,
+      "autoPort": true
+    },
+    {
+      "name": "agent-studio-home",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "agent-studio-home"],
+      "port": 4176,
+      "autoPort": true
+    },
+    {
+      "name": "ops-pages-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "docs"],
+      "port": 8080,
+      "autoPort": true
+    },
+    {
+      "name": "ops-workspace-agent",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "ops-workspace-agent"],
+      "port": 8934,
+      "autoPort": true
+    },
+    {
+      "name": "ops-workspace-blueprint",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "ops-workspace-blueprint", "--", "--port", "4177"],
+      "port": 4177,
+      "autoPort": true
+    }
+  ]
+}

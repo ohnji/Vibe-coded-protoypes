@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Studio — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-row">
+          <div class="pg-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 15V5a1 1 0 0 1 1-1h6a5 5 0 0 1 0 10H7v5z"/></svg>
+          </div>
+          <button class="icon-btn ghost" id="collapse-btn" aria-label="Collapse sidebar" aria-pressed="false">
+            <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+          </button>
+        </div>
+
+        <nav class="nav-section">
+          <button class="nav-item active" data-nav="home" type="button">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg></span>
+            <span class="nav-label">Home</span>
+          </button>
+          <button class="nav-item" data-nav="inbox" type="button">
+            <span class="nav-icon-badge">
+              <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h4l2 3h4l2-3h4"/></svg></span>
+              <span class="tag tag-neutral">0</span>
+            </span>
+            <span class="nav-label">Inbox</span>
+          </button>
+          <button class="nav-item" data-nav="chat" type="button">
+            <span class="nav-icon-badge">
+              <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4z"/></svg></span>
+              <span class="tag tag-red">458</span>
+            </span>
+            <span class="nav-label">Chat</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-head">
+          <span>Applications</span>
+          <button class="text-btn" type="button" data-toast="Application list coming soon">View all</button>
+        </div>
+        <button class="app-item" type="button" data-toast="Opening Gaia">
+          <span class="app-badge app-badge-gaia">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(120 12 12)"/></svg>
+          </span>
+          <span>Gaia</span>
+        </button>
+        <button class="app-item" type="button" data-toast="Opening Workbench">
+          <span class="app-badge app-badge-workbench">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.3 4.6L4 16.3V20h3.7l5.4-5.4a4 4 0 0 0 4.6-5.3l-2.6 2.6-2-2z"/></svg>
+          </span>
+          <span>Workbench</span>
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-head">
+          <span>My workspaces</span>
+          <button class="icon-btn ghost small" type="button" data-toast="New workspace" aria-label="New workspace">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <div class="conversations" id="conversations">
+          <button class="conversation-item" type="button" data-badge="2" data-badge-color="blue">
+            <span class="conversation-title">Write a roadmap</span>
+            <span class="tag tag-blue">2</span>
+          </button>
+          <button class="conversation-item" type="button" data-badge="1" data-badge-color="gold">
+            <span class="conversation-title">Write an MR</span>
+            <span class="tag tag-gold">1</span>
+          </button>
+          <button class="conversation-item" type="button" data-spinner="true">
+            <span class="conversation-title">Write athena T1 goals (shared, long live)</span>
+            <span class="spinner" aria-label="In progress"></span>
+          </button>
+          <button class="conversation-item" type="button" data-spinner="true">
+            <span class="conversation-title">Collection request management</span>
+            <span class="spinner" aria-label="In progress"></span>
+          </button>
+          <button class="conversation-item" type="button" data-badge="5" data-badge-color="orange">
+            <span class="conversation-title">HJF039 Asset management</span>
+            <span class="tag tag-orange">5</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-actions">
+        <button class="action-btn" type="button" id="new-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          <span>New</span>
+        </button>
+        <button class="action-btn" type="button" data-toast="Opening a workspace">
+          <svg viewBox="0 0 24 24"><path d="M4 7h5l2 2h9v9H4z"/></svg>
+          <span>Open</span>
+        </button>
+        <button class="action-btn" type="button" data-toast="Browsing all workspaces">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>
+          <span>Browse all</span>
+        </button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="action-btn" type="button" data-toast="Opening AIP Assist">
+          <img class="aip-icon" src="assets/aip-gradient.png" alt="" />
+          <span>Ask AIP Assist</span>
+        </button>
+        <button class="action-btn" type="button" data-toast="Opening help & support">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.5a2.7 2.7 0 1 1 4.3 2.2c-1 .6-1.5 1.1-1.5 2.1"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg>
+          <span>Help &amp; support</span>
+          <svg class="chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <div class="account-row">
+          <span class="avatar">RS</span>
+          <button class="action-btn flex1" type="button" data-toast="Opening account settings">
+            <span>Account &amp; settings</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="connection-row">
+          <span class="conn-icon"><svg viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5.5 12a10 10 0 0 1 13 0"/><path d="M9 15.5a5 5 0 0 1 6 0"/><circle cx="12" cy="19" r="1"/></svg></span>
+          <div class="conn-text">
+            <span class="conn-label">Connected to</span>
+            <span class="conn-value">danubestaging.palantircloud.com</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="home-main">
+      <div class="bg-decor"></div>
+      <div class="home-content">
+        <h1>What is on your mind?</h1>
+
+        <form class="prompt-card" id="prompt-form">
+          <textarea id="prompt-input" placeholder="Type the question you have today" rows="1"></textarea>
+          <div class="prompt-controls">
+            <div class="tool-icons">
+              <button type="button" class="tool-btn active" data-tool="tools" aria-label="All tools" aria-pressed="true">
+                <svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.3 4.6L4 16.3V20h3.7l5.4-5.4a4 4 0 0 0 4.6-5.3l-2.6 2.6-2-2z"/></svg>
+              </button>
+              <button type="button" class="tool-btn" data-tool="manual" aria-label="Manual mode" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h9v16H6a2 2 0 0 0-2 2z"/><path d="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2h-3z"/></svg>
+              </button>
+              <button type="button" class="tool-btn" data-tool="mic" aria-label="Voice input" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+              </button>
+              <button type="button" class="tool-btn" data-tool="more" aria-label="More tools" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+            <div class="prompt-right">
+              <div class="model-select-wrap">
+                <button type="button" class="model-select" id="model-select" aria-haspopup="listbox" aria-expanded="false">
+                  <span id="model-select-label">Claude 4.5 Sonnet</span>
+                  <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <ul class="model-menu" id="model-menu" role="listbox" hidden>
+                  <li role="option" data-model="Claude 4.5 Sonnet">Claude 4.5 Sonnet</li>
+                  <li role="option" data-model="Claude Opus 4.5">Claude Opus 4.5</li>
+                  <li role="option" data-model="Claude Haiku 4.5">Claude Haiku 4.5</li>
+                </ul>
+              </div>
+              <button type="submit" class="send-btn" id="send-btn" aria-label="Send">
+                <svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6z"/><path d="M20 4L11 13"/></svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <section class="suggestions">
+          <div class="suggestions-head">
+            <h2>Suggestions</h2>
+            <button class="text-link" type="button" data-toast="More suggestions coming soon">View all</button>
+          </div>
+          <div class="suggestion-grid">
+            <article class="suggestion-card" data-suggestion="Ideate options for a strike and generate an executable plan.">
+              <h3>Mission planning</h3>
+              <p>Ideate options for a strike and generate an executable plan.</p>
+              <div class="suggestion-meta">
+                <div class="meta-row">
+                  <img class="meta-icon" src="assets/aip-gradient.png" alt="" />
+                  <span>Hivemind,</span>
+                  <span class="meta-icon-inline" aria-hidden="true">◆</span>
+                  <span>Maverick plan</span>
+                </div>
+                <div class="meta-row muted">
+                  <svg class="meta-link-icon" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>
+                  <span>Ideation agent, Maverick Assist</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="suggestion-card" data-suggestion="Dive deeper into cases and track updates.">
+              <h3>Investigations</h3>
+              <p>Dive deeper into cases and track updatess</p>
+              <div class="suggestion-meta">
+                <div class="meta-row">
+                  <span class="app-badge app-badge-casehub small">
+                    <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>
+                  </span>
+                  <span>Case Hub</span>
+                </div>
+                <div class="meta-row muted">
+                  <svg class="meta-link-icon" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>
+                  <span>AIP Analyst, Notepad Assist, Vertex Assist</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="suggestion-card" data-suggestion="Commander view for CENTCOM logistics.">
+              <h3>Monitor logistics</h3>
+              <p>Commander view for CENTCOM</p>
+              <div class="suggestion-meta">
+                <div class="meta-row">
+                  <span class="meta-icon-tile" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="16" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/></svg>
+                  </span>
+                  <span>CENTCOM COP</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon-tile purple" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="1"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                  </span>
+                  <span>CENTCOM Logistics tracker</span>
+                </div>
+                <div class="meta-row muted">
+                  <svg class="meta-link-icon" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>
+                  <span>Gaia Assist, AIP Analyst, Ask CENTCOM</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon">✓</span>
+    <span id="toast-text"></span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+:root {
+  --bg: #14171c;
+  --panel: #1b1f26;
+  --card: #21262e;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8eaed;
+  --text-dim: #9aa2ad;
+  --accent: #2d72d2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---------- Main content ---------- */
+
+.content {
+  flex: 1;
+  padding: 40px 48px 56px;
+  max-width: 1140px;
+  margin: 0 auto;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 44px;
+}
+
+.logo-mark {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  color: var(--text);
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.prompt-section {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.prompt-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.prompt-box {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+#prompt-input {
+  width: 100%;
+  min-height: 96px;
+  resize: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 18px 60px 18px 20px;
+  font-size: 14px;
+  font-family: inherit;
+  background: white;
+  color: #111;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+#prompt-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.submit-btn {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submit-btn:hover { background: #245ba8; }
+
+.hint {
+  min-height: 18px;
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.dot {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Workflow sections (In progress / Start a new workflow) ---------- */
+
+.workflow-section {
+  margin-bottom: 40px;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin: 0 0 16px;
+}
+
+.progress-grid,
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.progress-card,
+.template-card {
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.progress-card:hover,
+.template-card:hover {
+  border-color: rgba(255,255,255,0.7);
+  background: #20252d;
+}
+
+.progress-card h4,
+.template-card h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.progress-sub {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.running-pill {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--text);
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.template-meta {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template-meta li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.template-meta .dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+  flex: none;
+}
+
+@media (max-width: 900px) {
+  .progress-grid,
+  .template-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .progress-grid,
+  .template-grid { grid-template-columns: 1fr; }
+  .content { padding: 24px; }
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danube Staging — Chat</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="workflow.css">
+</head>
+<body class="chat-body">
+  <div class="chat-page">
+    <header class="chat-header">
+      <a href="index.html" class="back-link">&larr; Back</a>
+      <span class="chat-title"><span class="chat-logo">&#9678;</span> Danube Staging</span>
+    </header>
+
+    <div class="chat-thread" id="chat-thread">
+      <div class="msg msg-user">
+        <div class="avatar avatar-user">JD</div>
+        <div class="msg-body">
+          <p class="msg-text" id="query-text">Loading query...</p>
+        </div>
+      </div>
+
+    </div>
+
+    <template id="agent-recommendation-tpl">
+      <p class="msg-text">Here's a recommended workflow that matches similar requests:</p>
+
+      <section class="wf-card">
+        <div class="wf-summary">
+          <h3>Support request resolution</h3>
+          <p class="wf-desc">
+            This workflow triages the request, drafts a resolution plan, and routes it for
+            execution across your connected tools — matched from workflows your team has run before.
+          </p>
+          <ul class="wf-meta">
+            <li><span class="dot">▦</span>Ticketing, CRM, Knowledge base</li>
+            <li><span class="dot">◇</span>Customers, Tickets, Articles</li>
+            <li><span class="dot">✦</span>Ideation agent, Critic agent, Problem solver...</li>
+            <li><span class="dot">🕐</span>~20 min</li>
+          </ul>
+          <button class="start-btn" id="start-btn">▶ Start the workflow</button>
+        </div>
+
+        <div class="wf-overview">
+          <h4>Workflow overview</h4>
+          <div class="stage-row">
+            <div class="stage-card" id="stage-1" data-stage="1">
+              <h5>Ideation</h5>
+              <p class="stage-tag"><span class="dot">✦</span>Ideation agent +2</p>
+              <p class="stage-tag"><span class="dot">↳</span>Idea objects</p>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+            </div>
+            <div class="stage-arrow">→</div>
+            <div class="stage-card" id="stage-2" data-stage="2">
+              <h5>Proposal</h5>
+              <p class="stage-tag"><span class="dot">✦</span>Critic agent +2</p>
+              <p class="stage-tag"><span class="dot">↳</span>Draft plan</p>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+            </div>
+            <div class="stage-arrow">→</div>
+            <div class="stage-card" id="stage-3" data-stage="3">
+              <h5>Execute</h5>
+              <p class="stage-tag"><span class="dot">✦</span>Problem solver +2</p>
+              <p class="stage-tag"><span class="dot">↳</span>Resolution plan</p>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h4 class="section-title small">Related artifacts</h4>
+      <div class="artifact-grid">
+        <div class="artifact-card"><div class="skeleton"></div><div class="skeleton short"></div></div>
+        <div class="artifact-card"><div class="skeleton"></div><div class="skeleton short"></div></div>
+        <div class="artifact-card"><div class="skeleton"></div><div class="skeleton short"></div></div>
+        <div class="artifact-card"><div class="skeleton"></div><div class="skeleton short"></div></div>
+      </div>
+    </template>
+
+    <form class="composer" id="composer-form">
+      <textarea id="composer-input" placeholder="Ask a follow-up..." rows="1"></textarea>
+      <button type="submit" class="submit-btn" aria-label="Send">↵</button>
+    </form>
+  </div>
+
+  <script src="workflow.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danube-Staging — Workspace</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="shell.css">
+<link rel="stylesheet" href="workspace.css">
+</head>
+<body class="shell-body">
+  <div class="ide-shell">
+    <aside class="ide-rail">
+      <a href="index.html" class="ide-rail-logo" aria-label="Back to home">◎</a>
+    </aside>
+    <div class="ide-main">
+      <div class="ide-tabbar">
+        <div class="ide-tab">
+          <span id="tab-label">Support request resolution</span>
+          <button class="ide-tab-close" onclick="window.location.href='index.html'" aria-label="Close tab">×</button>
+        </div>
+      </div>
+
+      <div class="ws-split">
+        <div class="ws-canvas">
+          <div class="ide-body" id="ws-body">
+            <div class="quoted-msg" id="query-quote">Loading query...</div>
+            <div id="ws-stream"></div>
+          </div>
+          <form class="composer" id="composer-form">
+            <textarea id="composer-input" placeholder="Ask a follow-up..." rows="1"></textarea>
+            <button type="submit" class="submit-btn" aria-label="Send">↵</button>
+          </form>
+        </div>
+
+        <aside class="ws-side">
+          <h3 class="ws-side-title" id="ws-title">Support request resolution</h3>
+          <div class="ws-side-tabs">
+            <div class="ws-side-tab active" data-tab="overview">Overview</div>
+            <div class="ws-side-tab" data-tab="artifacts">Artifacts <span class="count" id="count-artifacts">0</span></div>
+            <div class="ws-side-tab" data-tab="agents">Agents <span class="count" id="count-agents">0</span></div>
+            <div class="ws-side-tab" data-tab="sources">Sources <span class="count" id="count-sources">0</span></div>
+          </div>
+
+          <div class="ws-panel active" id="panel-overview">
+            <div class="ws-steps" id="ws-steps"></div>
+          </div>
+          <div class="ws-panel" id="panel-artifacts">
+            <div class="ws-list" id="list-artifacts"></div>
+          </div>
+          <div class="ws-panel" id="panel-agents">
+            <div class="ws-list" id="list-agents">
+              <div class="ws-list-item">Triage agent</div>
+              <div class="ws-list-item">Research agent</div>
+              <div class="ws-list-item">Drafting agent</div>
+              <div class="ws-list-item">Execution agent</div>
+            </div>
+          </div>
+          <div class="ws-panel" id="panel-sources">
+            <div class="ws-list" id="list-sources"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon">✓</span>
+    <span id="toast-text">Workflow complete — all tasks finished.</span>
+    <button class="toast-close" id="toast-close" aria-label="Dismiss">×</button>
+  </div>
+
+  <script src="workspace.js"></script>
+</body>
+</html>

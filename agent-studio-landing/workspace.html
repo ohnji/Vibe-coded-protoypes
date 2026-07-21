@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danube Staging — Workspace</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="workspace.css">
+</head>
+<body class="workspace-body">
+  <div class="ws-page">
+    <aside class="ws-sidebar">
+      <div class="ws-sidebar-header">
+        <div class="ws-title-group">
+          <a href="workflow.html" class="ws-back-btn" aria-label="Back to chat">&larr;</a>
+          <span class="ws-title" id="ws-title">Support request resolution</span>
+        </div>
+      </div>
+
+      <div class="ws-tabs">
+        <div class="ws-tab active" data-tab="log">Activity log</div>
+        <div class="ws-tab" data-tab="artifacts">Artifacts</div>
+      </div>
+
+      <div class="activity-log" id="activity-log"></div>
+
+      <div class="ws-agents">
+        <h6>Agents</h6>
+        <div class="agent-chip"><span>Triage agent</span><span class="kbd">⌘1</span></div>
+        <div class="agent-chip"><span>Research agent</span><span class="kbd">⌘2</span></div>
+        <div class="agent-chip"><span>Drafting agent</span><span class="kbd">⌘3</span></div>
+      </div>
+    </aside>
+
+    <main class="ws-main">
+      <div class="ws-tabbar" id="ws-tabbar"></div>
+
+      <div class="ws-content" id="ws-content">
+        <div id="content-blocks"></div>
+      </div>
+
+      <div class="status-float" id="status-float">
+        <div class="status-step" data-step="0">
+          <span class="status-dot"></span><span class="step-label">Reading the request..</span>
+        </div>
+        <div class="status-step" data-step="1">
+          <span class="status-dot"></span><span class="step-label">Retrieving relevant information</span>
+        </div>
+        <div class="status-step" data-step="2">
+          <span class="status-dot"></span><span class="step-label">Drafting response...</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="complete-toast">
+    <span class="toast-icon">✓</span>
+    <span>Workflow complete — all tasks finished.</span>
+    <button class="toast-close" id="toast-close" aria-label="Dismiss">&times;</button>
+  </div>
+
+  <script src="workspace.js"></script>
+</body>
+</html>

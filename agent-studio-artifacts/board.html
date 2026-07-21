@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danube Staging — Patient discharge</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="board.css">
+</head>
+<body class="board-body">
+  <div class="board-page">
+    <header class="board-header">
+      <div class="board-title-group">
+        <a href="workflow.html" class="board-back" aria-label="Back to chat">&larr;</a>
+        <h1 id="board-title">Patient discharge — John Doe</h1>
+      </div>
+      <div class="board-header-actions">
+        <button class="icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M7 9a5 5 0 0 1 10 0v5l2 3H5l2-3z"/><path d="M10 19.5a2 2 0 0 0 4 0"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Chat">
+          <svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg>
+        </button>
+        <button class="icon-btn active" aria-label="Board view">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Expand">
+          <svg viewBox="0 0 24 24"><path d="M9 4H4v5"/><path d="M15 4h5v5"/><path d="M9 20H4v-5"/><path d="M15 20h5v-5"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="board-filters">
+      <button class="filter-pill active" data-filter="all">Reports</button>
+      <button class="filter-pill" data-filter="artifacts">Artifacts</button>
+      <button class="filter-pill" data-filter="sources">Sources</button>
+      <button class="icon-btn filter-more" aria-label="More filters">
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
+      </button>
+    </div>
+
+    <main class="board-grid-wrap">
+      <div class="board-grid" id="board-grid"></div>
+    </main>
+
+    <form class="board-composer" id="composer-form">
+      <div class="composer-tag" id="composer-tag">
+        <span class="composer-tag-dot" id="composer-tag-dot"></span>
+        <span id="composer-tag-label">@Scheduler agent</span>
+        <button type="button" class="composer-tag-remove" id="composer-tag-remove" aria-label="Remove mention">&times;</button>
+      </div>
+      <textarea id="composer-input" placeholder="Ask a follow-up..." rows="1"></textarea>
+      <button type="submit" class="submit-btn" aria-label="Send">↵</button>
+    </form>
+
+    <nav class="agent-switcher" id="agent-switcher">
+      <button class="agent-tab active" data-agent="scheduler">
+        <span class="agent-dot agent-dot-scheduler"></span>
+        <span>Scheduler agent</span>
+        <span class="kbd">⌘1</span>
+      </button>
+      <button class="agent-tab" data-agent="writer">
+        <span class="agent-dot agent-dot-writer"></span>
+        <span>Writer agent</span>
+        <span class="kbd">⌘2</span>
+      </button>
+      <button class="agent-tab" data-agent="logistic">
+        <span class="agent-dot agent-dot-logistic"></span>
+        <span>Logistic agents</span>
+        <span class="kbd">⌘3</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="toast" id="board-toast">
+    <span class="toast-icon">✓</span>
+    <span id="board-toast-text">Approved.</span>
+    <button class="toast-close" id="board-toast-close" aria-label="Dismiss">&times;</button>
+  </div>
+
+  <script src="board.js"></script>
+</body>
+</html>
