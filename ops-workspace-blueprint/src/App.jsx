@@ -354,11 +354,117 @@ function WorkingPopover({ work, style }) {
   )
 }
 
+// Types a plain string out character by character, then reports back so the
+// caller can advance to the next block.
+function Typewriter({ text, speed = 16, onDone }) {
+  const [shown, setShown] = useState('')
+  const doneRef = useRef(onDone)
+  doneRef.current = onDone
+
+  useEffect(() => {
+    let char = 0
+    setShown('')
+    const timer = setInterval(() => {
+      char += 1
+      setShown(text.slice(0, char))
+      if (char >= text.length) {
+        clearInterval(timer)
+        doneRef.current?.()
+      }
+    }, speed)
+    return () => clearInterval(timer)
+  }, [text, speed])
+
+  return <>{shown}</>
+}
+
+// The workspace agent's opening report. Streams in when the workspace opens:
+// each paragraph types out, and the bullets / review items fade in on a
+// stagger once the paragraph above them has finished.
+function AgentWelcome({ toast, onHoverStart, onHoverEnd, onOpen }) {
+  // 0 typing greeting · 1 bullets · 2 typing review line · 3 review items
+  const [step, setStep] = useState(0)
+
+  useEffect(() => {
+    if (step !== 1) return
+    const timer = setTimeout(() => setStep(2), 1100)
+    return () => clearTimeout(timer)
+  }, [step])
+
+  return (
+    <div className="wa-welcome">
+      <div className="wa-welcome-inner">
+        <div className="wa-agent-name">
+          <SparkleIcon color="#ec9a3c" />
+          Watch Schedule - 82nd Agent
+        </div>
+
+        <p className="wa-msg">
+          <Typewriter
+            text="Welcome back Alex, here's what happened while you were away."
+            onDone={() => setStep((s) => (s === 0 ? 1 : s))}
+          />
+          {step === 0 && <span className="wa-stream-caret" />}
+        </p>
+
+        {step >= 1 && (
+          <ul className="wa-list">
+            <li className="wa-stream-in" style={{ animationDelay: '0ms' }}>
+              <a href="#" onClick={(e) => { e.preventDefault(); toast('Opening WS-0031') }}>WS-0031</a>{' '}
+              completed the relief checklist and is the leading item awaiting OOD sign-off.
+            </li>
+            <li className="wa-stream-in" style={{ animationDelay: '300ms' }}>
+              <a href="#" onClick={(e) => { e.preventDefault(); toast('Opening WS-0047') }}>WS-0047</a>{' '}
+              underperformed against the standard handover window — the agent logged a note flagging the delay.
+            </li>
+            <li className="wa-stream-in" style={{ animationDelay: '600ms' }}>
+              The Coverage Agent auto-flagged the 0400–0800 block after staffing fell below the minimum threshold.
+            </li>
+          </ul>
+        )}
+
+        {step >= 2 && (
+          <p className="wa-msg">
+            <Typewriter
+              text="The following items needs your review"
+              onDone={() => setStep((s) => (s === 2 ? 3 : s))}
+            />
+            {step === 2 && <span className="wa-stream-caret" />}
+          </p>
+        )}
+
+        {step >= 3 && (
+          <div className="wa-review-items">
+            {REVIEW_ITEMS.map((item, i) => (
+              <Card
+                key={item.id}
+                interactive
+                className="wa-review-item wa-stream-in"
+                style={{ animationDelay: `${i * 220}ms` }}
+                onMouseEnter={(e) => onHoverStart(item.id, e.currentTarget)}
+                onMouseLeave={onHoverEnd}
+                onClick={() => onOpen(item.id)}
+              >
+                <DottedCircleIcon className="wa-review-icon" />
+                <div className="wa-review-body">
+                  <span className="wa-review-title">{item.title}</span>
+                  <span className="wa-review-meta">{item.meta}</span>
+                </div>
+                <span className="wa-review-dot" />
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [rail, setRail] = useState('agent')
   const [panelCollapsed, setPanelCollapsed] = useState(false)
   const [tabs, setTabs] = useState(DEFAULT_TABS)
-  const [tab, setTab] = useState('board')
+  const [tab, setTab] = useState('handover')
   const [pill, setPill] = useState('coverage')
   const [askOpenKey, setAskOpenKey] = useState(null)
   const [activityOpen, setActivityOpen] = useState(false)
@@ -445,6 +551,11 @@ export default function App() {
     setHoverWork(null)
   }
 
+  // The side panel's header (in the tab bar) and its body collapse together —
+  // hiding one without the other leaves an orphaned 400px header strip.
+  // Session tabs take the full width, so they hide both as well.
+  const panelHidden = panelCollapsed || tab.startsWith('session-')
+
   return (
     <div className="bp6-dark wa-app">
       <div className="wa-titlebar">
@@ -452,7 +563,15 @@ export default function App() {
           <span className="wa-dot wa-dot-red" />
           <span className="wa-dot wa-dot-yellow" />
           <span className="wa-dot wa-dot-green" />
-          <Button minimal small icon="panel-stats" onClick={() => toast('Toggle panel')} />
+          <Button
+            minimal
+            small
+            icon="panel-stats"
+            className={`wa-panel-toggle ${panelHidden ? '' : 'active'}`}
+            aria-label={panelCollapsed ? 'Show side panel' : 'Hide side panel'}
+            title={panelCollapsed ? 'Show side panel' : 'Hide side panel'}
+            onClick={() => setPanelCollapsed((c) => !c)}
+          />
           <Button minimal small icon="chevron-left" onClick={() => toast('No back history')} />
           <Button minimal small icon="chevron-right" onClick={() => toast('No forward history')} />
         </div>
@@ -487,6 +606,7 @@ export default function App() {
 
         <div className="wa-main-col">
           <div className="wa-tab-bar">
+            {!panelHidden && (
             <div className="wa-tab-bar-left">
               <Button
                 minimal
@@ -513,6 +633,7 @@ export default function App() {
                 />
               </div>
             </div>
+            )}
             <div className="wa-tabs">
               <Tabs id="ws-tabs" selectedTabId={tab} onChange={(id) => setTab(id)}>
                 {tabs.map((t) => (
@@ -546,50 +667,16 @@ export default function App() {
           </div>
 
           <div className="wa-content-row">
-            {!panelCollapsed && !tab.startsWith('session-') && (
+            {!panelHidden && (
             <section className="wa-panel">
               {rail === 'agent' && (
                 <>
-                  <div className="wa-welcome">
-                    <div className="wa-welcome-inner">
-                      <div className="wa-agent-name">
-                        <SparkleIcon color="#ec9a3c" />
-                        Watch Schedule - 82nd Agent
-                      </div>
-                      <p className="wa-msg">Welcome back Alex, here&apos;s what happened while you were away.</p>
-                      <ul className="wa-list">
-                        <li>
-                          <a href="#" onClick={(e) => { e.preventDefault(); toast('Opening WS-0031') }}>WS-0031</a>{' '}
-                          completed the relief checklist and is the leading item awaiting OOD sign-off.
-                        </li>
-                        <li>
-                          <a href="#" onClick={(e) => { e.preventDefault(); toast('Opening WS-0047') }}>WS-0047</a>{' '}
-                          underperformed against the standard handover window — the agent logged a note flagging the delay.
-                        </li>
-                        <li>The Coverage Agent auto-flagged the 0400–0800 block after staffing fell below the minimum threshold.</li>
-                      </ul>
-                      <p className="wa-msg">The following items needs your review</p>
-                      <div className="wa-review-items">
-                        {REVIEW_ITEMS.map((item) => (
-                          <Card
-                            key={item.id}
-                            interactive
-                            className="wa-review-item"
-                            onMouseEnter={(e) => handleTPHoverStart(item.id, e.currentTarget)}
-                            onMouseLeave={handleTPHoverEnd}
-                            onClick={() => handleOpenTouchpoint(item.id)}
-                          >
-                            <DottedCircleIcon className="wa-review-icon" />
-                            <div className="wa-review-body">
-                              <span className="wa-review-title">{item.title}</span>
-                              <span className="wa-review-meta">{item.meta}</span>
-                            </div>
-                            <span className="wa-review-dot" />
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  <AgentWelcome
+                    toast={toast}
+                    onHoverStart={handleTPHoverStart}
+                    onHoverEnd={handleTPHoverEnd}
+                    onOpen={handleOpenTouchpoint}
+                  />
 
                   <ChatInput toast={toast} />
                 </>
@@ -711,7 +798,6 @@ export default function App() {
                 onClick={() => setActivityOpen((open) => !open)}
               >
                 Open agent manager
-                <Icon icon="chevron-up" size={11} className={`wa-activities-caret ${activityOpen ? 'flipped' : ''}`} />
               </Button>
             </div>
           </div>
