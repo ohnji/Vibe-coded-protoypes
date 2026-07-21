@@ -478,6 +478,7 @@ export default function App() {
   const agentHoverTimer = useRef(null)
   const [hoverWork, setHoverWork] = useState(null)
   const workHoverTimer = useRef(null)
+  const [approvedTouchpoints, setApprovedTouchpoints] = useState(new Set(['security-bump-1', 'security-bump-2']))
   const toast = useToast()
 
   const handleAskOpen = (key, fromCardClick) => {
@@ -527,6 +528,11 @@ export default function App() {
         : [...prev, { id: sessTabId, kind: 'session', title: session.title, session, closable: true }]
     ))
     setTab(sessTabId)
+  }
+
+  const handleApproveTouchpoint = (touchpointId) => {
+    setApprovedTouchpoints((prev) => new Set([...prev, touchpointId]))
+    toast('Approved')
   }
 
   const handleAgentHoverStart = (id, target) => {
@@ -687,6 +693,7 @@ export default function App() {
                   onHover={handleTPHoverStart}
                   onHoverEnd={handleTPHoverEnd}
                   onOpen={handleOpenTouchpoint}
+                  approvedTouchpoints={approvedTouchpoints}
                 />
               )}
               {rail === 'activity' && <ActivityPanel toast={toast} />}
@@ -698,7 +705,13 @@ export default function App() {
             {tab === 'handover' ? (
               <HandoverLog toast={toast} onInspect={handleInspect} />
             ) : tab.startsWith('tp-') ? (
-              <TouchpointView touchpoint={TOUCHPOINTS[tabs.find((t) => t.id === tab)?.touchpointId]} onOpenSession={handleOpenSession} toast={toast} />
+              <TouchpointView
+                touchpoint={TOUCHPOINTS[tabs.find((t) => t.id === tab)?.touchpointId]}
+                onOpenSession={handleOpenSession}
+                toast={toast}
+                isApproved={approvedTouchpoints.has(tabs.find((t) => t.id === tab)?.touchpointId)}
+                onApprove={handleApproveTouchpoint}
+              />
             ) : tab.startsWith('session-') ? (
               <AgentSession key={tab} session={tabs.find((t) => t.id === tab)?.session} toast={toast} />
             ) : (

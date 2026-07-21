@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Icon } from '@blueprintjs/core'
+import { Button, Icon, Tag } from '@blueprintjs/core'
 import SatelliteMap from './SatelliteMap'
 import { DottedCircleIcon } from './icons'
 
@@ -145,7 +145,7 @@ function ProcessStep({ step, touchpoint, onOpenSession, toast }) {
   )
 }
 
-export default function TouchpointView({ touchpoint, onOpenSession, toast }) {
+export default function TouchpointView({ touchpoint, onOpenSession, toast, isApproved, onApprove }) {
   const [processTab, setProcessTab] = useState('process')
   if (!touchpoint) return null
 
@@ -155,11 +155,28 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast }) {
         <div className="tp-view-title-row">
           <DottedCircleIcon size={18} />
           <h2>{touchpoint.title}</h2>
+          {isApproved && (
+            <Tag intent="success" icon="tick" minimal style={{ marginLeft: '12px' }}>
+              Approved by Chris 1m ago
+            </Tag>
+          )}
         </div>
         <div className="tp-view-actions">
           <Button minimal small icon="more" onClick={() => toast('More actions')} aria-label="More" />
           <Button small onClick={() => toast('Rejected')}>Reject</Button>
-          <Button small intent="success" icon="tick" onClick={() => toast('Approved')}>Approve</Button>
+          <Button
+            small
+            intent="success"
+            icon="tick"
+            disabled={isApproved}
+            onClick={() => {
+              if (!isApproved) {
+                onApprove?.(touchpoint.id)
+              }
+            }}
+          >
+            {isApproved ? 'Approved' : 'Approve'}
+          </Button>
         </div>
       </div>
       <div className="tp-view-meta">
@@ -175,6 +192,34 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast }) {
                 <SatelliteMap pins={touchpoint.map.pins} inset={touchpoint.map.inset} />
               </div>
             </>
+          ) : touchpoint.content?.type === 'log' ? (
+            <div className="tp-view-log">
+              <div className="tp-log-header">
+                <h3>Turnover Log Entries</h3>
+              </div>
+              <table className="tp-log-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Post/Area</th>
+                    <th>Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {touchpoint.content.entries.map((entry, i) => (
+                    <tr key={i} className={`tp-log-entry tp-log-${entry.type.toLowerCase()}`}>
+                      <td className="tp-log-time">{entry.time}</td>
+                      <td className="tp-log-type">
+                        <span className="tp-log-badge">{entry.type}</span>
+                      </td>
+                      <td className="tp-log-post">{entry.post}</td>
+                      <td className="tp-log-note">{entry.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <div className="tp-view-placeholder">
               <p>{touchpoint.previewNote}</p>

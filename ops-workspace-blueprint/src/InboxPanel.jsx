@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Icon } from '@blueprintjs/core'
+import { Icon, Tag } from '@blueprintjs/core'
 import { DottedCircleIcon } from './icons'
 
 const ITEMS = [
@@ -35,9 +35,21 @@ const ITEMS = [
   },
 ]
 
-export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen }) {
+export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, approvedTouchpoints }) {
   const [filter, setFilter] = useState('all')
-  const visible = filter === 'unread' ? ITEMS.filter((i) => i.unread) : ITEMS
+
+  const ITEMS_WITH_APPROVAL = ITEMS.map((item) => {
+    if (approvedTouchpoints?.has(item.id)) {
+      return {
+        ...item,
+        unread: false,
+        meta: item.meta.replace(/·.*/, '').trim() + ' · Approved ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      }
+    }
+    return item
+  })
+
+  const visible = filter === 'unread' ? ITEMS_WITH_APPROVAL.filter((i) => i.unread) : ITEMS_WITH_APPROVAL
 
   return (
     <div className="wa-side-panel">
@@ -64,23 +76,34 @@ export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen }) {
       </div>
 
       <div className="wa-inbox-list">
-        {visible.map((item) => (
-          <button
-            type="button"
-            key={item.id}
-            className={`wa-inbox-item ${item.unread ? 'unread' : ''}`}
-            onMouseEnter={(e) => onHover?.(item.id, e.currentTarget)}
-            onMouseLeave={() => onHoverEnd?.()}
-            onClick={() => onOpen?.(item.id)}
-          >
-            <DottedCircleIcon className="wa-inbox-icon" />
-            <span className="wa-inbox-body">
-              <span className="wa-inbox-title">{item.title}</span>
-              <span className="wa-inbox-meta">{item.meta}</span>
-            </span>
-            {item.unread && <span className="wa-inbox-dot" />}
-          </button>
-        ))}
+        {visible.map((item) => {
+          const isApproved = approvedTouchpoints?.has(item.id)
+          return (
+            <button
+              type="button"
+              key={item.id}
+              className={`wa-inbox-item ${item.unread ? 'unread' : ''}`}
+              onMouseEnter={(e) => onHover?.(item.id, e.currentTarget)}
+              onMouseLeave={() => onHoverEnd?.()}
+              onClick={() => onOpen?.(item.id)}
+            >
+              <DottedCircleIcon className="wa-inbox-icon" />
+              <span className="wa-inbox-body">
+                <span className="wa-inbox-title">{item.title}</span>
+                <span className="wa-inbox-meta">
+                  {isApproved ? (
+                    <Tag intent="success" icon="tick" minimal>
+                      Approved by Chris 1m ago
+                    </Tag>
+                  ) : (
+                    item.meta
+                  )}
+                </span>
+              </span>
+              {item.unread && <span className="wa-inbox-dot" />}
+            </button>
+          )
+        })}
       </div>
     </div>
   )
