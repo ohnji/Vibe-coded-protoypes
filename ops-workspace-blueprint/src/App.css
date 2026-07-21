@@ -111,6 +111,14 @@
 .wa-review-meta { font-size: 11.5px; color: var(--wa-text-faint); }
 .wa-review-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--wa-accent-light); flex: none; margin-top: 5px; margin-left: auto; }
 
+/* Decision line shown once a review item has been approved / rejected. */
+.wa-review-decision { display: inline-flex; align-items: center; gap: 4px; }
+.wa-review-decision .wa-review-decision-label { font-weight: 600; }
+.wa-review-decision.approved .bp6-icon,
+.wa-review-decision.approved .wa-review-decision-label { color: var(--wa-green, #3dcc91); }
+.wa-review-decision.rejected .bp6-icon,
+.wa-review-decision.rejected .wa-review-decision-label { color: var(--wa-red, #ff7373); }
+
 /* ---------- Custom chat input (matches Figma mock, not default Blueprint styling) ---------- */
 .wa-chat-input { border-top: 1px solid var(--wa-border); padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; flex: none; }
 .wa-chat-box {
@@ -273,6 +281,33 @@
   .wa-stream-caret { animation: none; }
 }
 
+/* Workspace agent conversation, below the opening report. */
+.wa-chat-thread { display: flex; flex-direction: column; gap: 18px; margin-top: 22px; }
+.wa-chat-user {
+  align-self: flex-end; max-width: 88%;
+  padding: 10px 12px; border: 1px solid var(--wa-border);
+  border-radius: 6px; background: rgba(255,255,255,0.03);
+  font-size: 13.5px; line-height: 20px;
+}
+.wa-chat-agent { display: flex; flex-direction: column; }
+.wa-chat-agent .wa-agent-name { margin-bottom: 8px; }
+.wa-chat-step { margin-top: 2px; }
+.wa-chat-step-row {
+  width: 100%; display: flex; align-items: center; gap: 9px;
+  padding: 6px 2px; border: none; background: none; cursor: pointer;
+  color: var(--wa-text-dim); text-align: left; font: inherit; font-size: 13px;
+}
+.wa-chat-step-row:hover { color: #f6f7f9; }
+.wa-chat-step-icon { flex: none; opacity: 0.8; }
+.wa-chat-step-label { flex: 1; min-width: 0; }
+.wa-chat-step-caret { flex: none; opacity: 0.7; transition: transform 150ms ease; }
+.wa-chat-step-caret.flip { transform: rotate(90deg); }
+.wa-chat-step-detail {
+  margin: 0 0 4px 23px; padding-left: 10px;
+  border-left: 1px solid var(--wa-border);
+  font-size: 12.5px; line-height: 18px; color: var(--wa-text-faint);
+}
+
 .wa-group .bp6-tag { min-width: 20px; }
 
 /* ---------- Status bar ---------- */
@@ -282,10 +317,13 @@
 .wa-pill .bp6-button-text { display: flex !important; align-items: center; gap: 6px; }
 .wa-pill.active { background: #252a31 !important; color: #f6f7f9 !important; }
 .wa-status-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.wa-count.bp6-tag { background: rgba(255,255,255,0.08) !important; color: var(--wa-text-dim); min-width: 16px; text-align: center; }
-.wa-count.warn { color: var(--wa-orange) !important; }
-.wa-count.info { color: var(--wa-accent-light) !important; }
-.wa-count.ok { color: var(--wa-green) !important; }
+/* Status counts: icon + number, no pill. Colour comes from the icon; the
+   number stays dim so the glyph carries the meaning. */
+.wa-count { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--wa-text-dim); }
+.wa-count .bp6-icon { flex: none; }
+.wa-count.warn .bp6-icon { color: #d9822b; }
+.wa-count.info .bp6-icon { color: var(--wa-accent-light); }
+.wa-count.done .bp6-icon { color: var(--wa-text-faint); }
 
 .wa-activities-btn { gap: 6px !important; color: var(--wa-text-dim) !important; transition: color 150ms ease; }
 .wa-activities-btn .bp6-icon:first-child { transition: color 150ms ease, transform 150ms ease; }
@@ -686,12 +724,14 @@ button.hl-row:hover { background: rgba(138,187,255,0.05); }
 .wa-input-tag-remove { cursor: pointer; opacity: 0.7; }
 .wa-input-tag-remove:hover { opacity: 1; }
 
-/* ---------- Satellite map (fake terrain, no real imagery available) ---------- */
+/* ---------- Satellite map ----------
+   Real satellite imagery; `cover` keeps its aspect ratio rather than
+   squashing the terrain into the panel's shape. */
 .sm-root { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 6px; background: #0b1a10; }
 .sm-terrain {
   position: absolute; inset: 0;
   background-image: url('./assets/map-satellite.png');
-  background-size: 100% 100%;
+  background-size: cover;
   background-position: center;
 }
 .sm-inset {
@@ -831,6 +871,38 @@ button.hl-row:hover { background: rgba(138,187,255,0.05); }
 .tp-process-caret.flip { transform: rotate(180deg); }
 .tp-process-empty { padding: 20px 16px; font-size: 13px; color: var(--wa-text-faint); }
 
+/* ---------- Touchpoint decision (approved / rejected) ---------- */
+.tp-decision-icon.approved { color: var(--wa-green) !important; }
+.tp-decision-icon.rejected { color: var(--wa-red) !important; }
+.tp-decision-pill {
+  display: inline-flex; align-items: center; gap: 5px; flex: none;
+  font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+}
+.tp-decision-pill.approved { background: rgba(163,220,190,0.15); color: var(--wa-green); }
+.tp-decision-pill.rejected { background: rgba(231,106,110,0.15); color: var(--wa-red); }
+.tp-decision-pill .bp6-icon { color: inherit !important; }
+
+.tp-approved-banner {
+  display: flex; align-items: center; gap: 10px; margin: 0 20px 16px;
+  padding: 10px 14px; border-radius: 6px;
+  background: rgba(163,220,190,0.1); border: 1px solid rgba(163,220,190,0.35);
+}
+.tp-approved-banner .bp6-icon { color: var(--wa-green); flex: none; }
+.tp-approved-text { font-size: 12.5px; line-height: 18px; color: #f6f7f9; }
+.tp-approved-action {
+  margin-left: auto; flex: none; font-family: inherit; font-size: 12px; cursor: pointer;
+  padding: 5px 10px; border-radius: 5px; color: var(--wa-green);
+  background: none; border: 1px solid rgba(163,220,190,0.4);
+}
+.tp-approved-action:hover { background: rgba(163,220,190,0.14); }
+
+.tp-process-card-static { cursor: default; align-items: center; }
+.tp-process-card-static:hover { border-color: var(--wa-border); }
+.tp-process-decision.approved > .tp-process-card { border-color: rgba(163,220,190,0.4); background: rgba(163,220,190,0.07); }
+.tp-process-decision.rejected > .tp-process-card { border-color: rgba(231,106,110,0.4); background: rgba(231,106,110,0.07); }
+.tp-badge-approved { color: var(--wa-green); background: rgba(163,220,190,0.14); }
+.tp-badge-rejected { color: var(--wa-red); background: rgba(231,106,110,0.14); }
+
 /* Expanded step: blue outline + rich detail body */
 .tp-process-step.expanded > .tp-process-card {
   border-color: var(--wa-accent-light); border-bottom-left-radius: 0; border-bottom-right-radius: 0;
@@ -952,3 +1024,55 @@ button.hl-row:hover { background: rgba(138,187,255,0.05); }
 }
 .as-input-send:hover { color: #a9caff; }
 .as-expiry { max-width: 720px; margin: 8px auto 0; text-align: center; font-size: 11.5px; color: var(--wa-text-faint); }
+
+/* ── Report document tab ──────────────────────────────────────────────────
+   A light-themed document editor, deliberately contrasting with the dark
+   workspace chrome around it (matches the reference mock). */
+.rd-doc { flex: 1; min-width: 0; display: flex; flex-direction: column; background: #fff; color: #1c2127; }
+.rd-chrome { flex: none; border-bottom: 1px solid #d9dde2; background: #f6f7f9; }
+.rd-titlerow { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-bottom: 1px solid #e4e7eb; }
+.rd-titlerow-icon { color: #5f6b7c; }
+.rd-titlerow-name { font-size: 13px; font-weight: 600; }
+.rd-titlerow-sep { width: 1px; height: 16px; margin: 0 4px; background: #d9dde2; }
+.rd-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border: none; border-radius: 3px;
+  background: none; color: #5f6b7c; cursor: pointer;
+}
+.rd-icon-btn:hover { background: rgba(0,0,0,0.06); }
+.rd-badge {
+  display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+  min-width: 18px; height: 17px; padding: 0 5px; border-radius: 9px;
+  font-size: 10.5px; font-weight: 600;
+}
+.rd-badge-ok { background: #d4f3e0; color: #1c6e42; }
+.rd-badge-info { background: #d7e6ff; color: #1f4b99; }
+.rd-badge-warn { background: #ffe7c2; color: #8a5300; }
+.rd-menus { display: flex; gap: 2px; margin-left: 14px; }
+.rd-menu {
+  padding: 4px 8px; border: none; border-radius: 3px;
+  background: none; color: #1c2127; font: inherit; font-size: 13px; cursor: pointer;
+}
+.rd-menu:hover { background: rgba(0,0,0,0.06); }
+
+.rd-toolbar { display: flex; align-items: center; gap: 1px; padding: 5px 10px; flex-wrap: wrap; }
+.rd-tool {
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 26px; padding: 0 6px; border: none; border-radius: 3px;
+  background: none; color: #1c2127; cursor: pointer;
+}
+.rd-tool:hover { background: rgba(0,0,0,0.06); }
+.rd-tool-wide { padding: 0 8px; }
+.rd-tool-text { font-size: 13px; white-space: nowrap; }
+.rd-tool-sep { width: 1px; height: 18px; margin: 0 5px; background: #d9dde2; }
+.rd-toolbar-right { margin-left: auto; display: flex; gap: 2px; }
+
+.rd-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 34px 20px 60px; }
+.rd-page { max-width: 720px; margin: 0 auto; }
+.rd-title { margin: 0 0 22px; font-size: 27px; line-height: 34px; font-weight: 700; }
+.rd-fields { margin: 0 0 24px; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; }
+.rd-fields li, .rd-bullets li { font-size: 14px; line-height: 21px; }
+.rd-section { margin-bottom: 22px; }
+.rd-heading { margin: 0 0 8px; font-size: 14.5px; font-weight: 700; }
+.rd-body { margin: 0 0 8px; font-size: 14px; line-height: 21px; }
+.rd-bullets { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; }

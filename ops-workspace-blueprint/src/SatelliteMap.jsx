@@ -1,6 +1,7 @@
-// A fake satellite-map background (no real imagery available) built from
-// layered CSS gradients, plus positioned pin markers and an optional inset
-// "zoomed detail" box — matching the terrain-map touchpoint mock.
+// Satellite imagery background (see assets/map-satellite.png — a clean plate
+// with the source screenshot's own pins/compass painted out), plus positioned
+// pin markers and an optional inset "zoomed detail" box, matching the
+// terrain-map touchpoint mock.
 
 function Pin({ label, small }) {
   return (

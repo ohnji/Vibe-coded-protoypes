@@ -1,43 +1,28 @@
 import { useState } from 'react'
 import { Icon } from '@blueprintjs/core'
 import { DottedCircleIcon } from './icons'
+import { INBOX_ITEMS } from './inbox'
+import { formatListTime } from './format'
 
-const ITEMS = [
-  {
-    id: 'suspicious-activity',
-    title: 'Three posts on the North watch line missed check-in. Do you want to open a report?',
-    meta: 'Coverage workflow · Jun 1, 02:14',
-    unread: true,
-  },
-  {
-    id: 'rfi-draft',
-    title: 'Turnover log drafted for the eastern night watch.',
-    meta: 'Handover workflow · Jun 1, 02:14',
-    unread: true,
-  },
-  {
-    id: 'sensor-sigint',
-    title: 'Watch stander WS-0047 exceeded max consecutive hours.',
-    meta: 'Roster workflow · Jun 1, 02:14',
-    unread: true,
-  },
-  {
-    id: 'security-bump-1',
-    title: 'Requires supervisor sign-off on the Watch Bill',
-    meta: 'Watch Bill workflow · Approved June 1, 02:14',
-    unread: false,
-  },
-  {
-    id: 'security-bump-2',
-    title: 'Requires supervisor sign-off on the Watch Bill',
-    meta: 'Watch Bill workflow · Approved June 1, 02:14',
-    unread: false,
-  },
-]
+// Meta line under a review item's title. Once the item has been approved or
+// rejected in its touchpoint tab, the workflow/timestamp line is replaced by
+// the decision and when it was made.
+export function ReviewMeta({ item, review, className = 'wa-inbox-meta' }) {
+  if (!review) return <span className={className}>{item.meta}</span>
+  const approved = review.decision === 'approved'
+  return (
+    <span className={`${className} wa-review-decision ${review.decision}`}>
+      <Icon icon={approved ? 'tick' : 'cross'} size={12} />
+      <span className="wa-review-decision-label">{approved ? 'Approved' : 'Rejected'}</span>
+      {' · '}
+      {formatListTime(review.at)}
+    </span>
+  )
+}
 
-export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen }) {
+export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, reviews }) {
   const [filter, setFilter] = useState('all')
-  const visible = filter === 'unread' ? ITEMS.filter((i) => i.unread) : ITEMS
+  const visible = filter === 'unread' ? INBOX_ITEMS.filter((i) => i.unread) : INBOX_ITEMS
 
   return (
     <div className="wa-side-panel">
@@ -64,23 +49,26 @@ export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen }) {
       </div>
 
       <div className="wa-inbox-list">
-        {visible.map((item) => (
-          <button
-            type="button"
-            key={item.id}
-            className={`wa-inbox-item ${item.unread ? 'unread' : ''}`}
-            onMouseEnter={(e) => onHover?.(item.id, e.currentTarget)}
-            onMouseLeave={() => onHoverEnd?.()}
-            onClick={() => onOpen?.(item.id)}
-          >
-            <DottedCircleIcon className="wa-inbox-icon" />
-            <span className="wa-inbox-body">
-              <span className="wa-inbox-title">{item.title}</span>
-              <span className="wa-inbox-meta">{item.meta}</span>
-            </span>
-            {item.unread && <span className="wa-inbox-dot" />}
-          </button>
-        ))}
+        {visible.map((item) => {
+          const review = reviews?.[item.id]
+          return (
+            <button
+              type="button"
+              key={item.id}
+              className={`wa-inbox-item ${item.unread ? 'unread' : ''} ${review ? `is-${review.decision}` : ''}`}
+              onMouseEnter={(e) => onHover?.(item.id, e.currentTarget)}
+              onMouseLeave={() => onHoverEnd?.()}
+              onClick={() => onOpen?.(item.id)}
+            >
+              <DottedCircleIcon className="wa-inbox-icon" />
+              <span className="wa-inbox-body">
+                <span className="wa-inbox-title">{item.title}</span>
+                <ReviewMeta item={item} review={review} />
+              </span>
+              {item.unread && <span className="wa-inbox-dot" />}
+            </button>
+          )
+        })}
       </div>
     </div>
   )

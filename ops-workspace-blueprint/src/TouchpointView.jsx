@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Icon } from '@blueprintjs/core'
 import SatelliteMap from './SatelliteMap'
 import { DottedCircleIcon } from './icons'
+import { formatHeaderTime } from './format'
 
 // The embedded-app menu bar that sits on top of the map, matching the mock:
 // document name + favorite + status pills, then a File/Edit/View… menu row.
@@ -145,26 +146,89 @@ function ProcessStep({ step, touchpoint, onOpenSession, toast }) {
   )
 }
 
-export default function TouchpointView({ touchpoint, onOpenSession, toast }) {
+export default function TouchpointView({ touchpoint, onOpenSession, toast, review, onDecide }) {
   const [processTab, setProcessTab] = useState('process')
   if (!touchpoint) return null
 
+  // The decision lives in App so the Inbox / review lists reflect it too.
+  const decision = review?.decision ?? null
+  const approved = decision === 'approved'
+  const setDecision = (next) => onDecide(touchpoint.id, next)
+  const detailStep = touchpoint.process.find((s) => s.detail)
+
   return (
-    <section className="tp-view">
+    <section className={`tp-view ${decision ? `is-${decision}` : ''}`}>
       <div className="tp-view-head">
         <div className="tp-view-title-row">
-          <DottedCircleIcon size={18} />
+          {decision ? (
+            <Icon
+              icon={approved ? 'tick-circle' : 'cross-circle'}
+              size={18}
+              className={`tp-decision-icon ${decision}`}
+            />
+          ) : (
+            <DottedCircleIcon size={18} />
+          )}
           <h2>{touchpoint.title}</h2>
         </div>
         <div className="tp-view-actions">
           <Button minimal small icon="more" onClick={() => toast('More actions')} aria-label="More" />
-          <Button small onClick={() => toast('Rejected')}>Reject</Button>
-          <Button small intent="success" icon="tick" onClick={() => toast('Approved')}>Approve</Button>
+          {decision ? (
+            <>
+              <span className={`tp-decision-pill ${decision}`}>
+                <Icon icon={approved ? 'tick' : 'cross'} size={12} />
+                {approved ? 'Approved' : 'Rejected'}
+                {review?.at && ` · ${formatHeaderTime(review.at)}`}
+              </span>
+              <Button
+                minimal
+                small
+                onClick={() => {
+                  setDecision(null)
+                  toast('Decision undone — back to review')
+                }}
+              >
+                Undo
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button small onClick={() => { setDecision('rejected'); toast('Rejected') }}>Reject</Button>
+              <Button
+                small
+                intent="success"
+                icon="tick"
+                onClick={() => { setDecision('approved'); toast('Approved') }}
+              >
+                Approve
+              </Button>
+            </>
+          )}
         </div>
       </div>
       <div className="tp-view-meta">
-        {touchpoint.agentName} · Paused {touchpoint.pausedAgo} · Triggered by {touchpoint.triggeredBy}
+        {decision
+          ? `${touchpoint.agentName} · ${approved ? 'Approved' : 'Rejected'} by Alex · just now`
+          : `${touchpoint.agentName} · Paused ${touchpoint.pausedAgo} · Triggered by ${touchpoint.triggeredBy}`}
       </div>
+
+      {approved && (
+        <div className="tp-approved-banner">
+          <Icon icon="tick-circle" size={15} />
+          <span className="tp-approved-text">
+            Approved — {touchpoint.agentName} has resumed the workflow and will publish the result.
+          </span>
+          {detailStep && (
+            <button
+              type="button"
+              className="tp-approved-action"
+              onClick={() => onOpenSession?.(buildStepSession(touchpoint, detailStep))}
+            >
+              View agent session
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="tp-view-body">
         <div className="tp-view-main">
@@ -208,11 +272,37 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast }) {
               {touchpoint.process.map((step, i) =>
                 step.group ? (
                   <div className="tp-process-group" key={i}>
-                    <span className="tp-process-group-tag">{step.group} <Icon icon="small-cross" size={11} /></span>
+                    <span className="tp-process-group-tag">{step.group} <Icon icon="chevron-right" size={11} /></span>
                   </div>
                 ) : (
                   <ProcessStep step={step} touchpoint={touchpoint} onOpenSession={onOpenSession} key={step.id || i} toast={toast} />
                 )
+              )}
+              {decision && (
+                <div className={`tp-process-step tp-process-decision ${decision}`}>
+                  <span className={`tp-process-badge tp-badge-${decision}`}>
+                    {approved ? 'APPROVED' : 'REJECTED'}
+                  </span>
+                  <div className="tp-process-card tp-process-card-static">
+                    <Icon
+                      icon={approved ? 'tick-circle' : 'cross-circle'}
+                      size={14}
+                      className={`tp-decision-icon ${decision}`}
+                    />
+                    <div className="tp-process-head">
+                      <span className="tp-process-title">
+                        {approved
+                          ? 'Approved — workflow resumed'
+                          : 'Rejected — workflow stopped'}
+                      </span>
+                      <span className="tp-process-meta">
+                        <span>Alex</span>
+                        <span className="tp-agent-pill">You</span>
+                        <span>just now</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           ) : (
