@@ -559,8 +559,7 @@ export default function App() {
 
   // The side panel's header (in the tab bar) and its body collapse together —
   // hiding one without the other leaves an orphaned 400px header strip.
-  // Session tabs take the full width, so they hide both as well.
-  const panelHidden = panelCollapsed || tab.startsWith('session-')
+  const panelHidden = panelCollapsed
 
   return (
     <div className="bp6-dark wa-app">
