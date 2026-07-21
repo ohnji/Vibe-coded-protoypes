@@ -43,7 +43,6 @@ const GENERIC_PROCESS = (automation, opts = {}) => {
       title: `Found ${found.link}${found.tail}`,
       link: found.link,
       meta: 'Coverage agent · Agent · 1m ago',
-      defaultOpen: true,
       detail: {
         summary: 'Following initial review of the related posts, this appears to be a recurring coverage shortfall requiring additional relief. Patterns may be connected to ongoing gaps in the night watch sections.',
         aiGenerated: true,

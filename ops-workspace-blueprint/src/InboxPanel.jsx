@@ -1,40 +1,26 @@
 import { useState } from 'react'
 import { Icon, Tag } from '@blueprintjs/core'
 import { DottedCircleIcon } from './icons'
+import { INBOX_ITEMS } from './inbox'
+import { formatListTime } from './format'
 
-const ITEMS = [
-  {
-    id: 'suspicious-activity',
-    title: 'Three posts on the North watch line missed check-in. Do you want to open a report?',
-    meta: 'Coverage workflow · Jun 1, 02:14',
-    unread: true,
-  },
-  {
-    id: 'rfi-draft',
-    title: 'Turnover log drafted for the eastern night watch.',
-    meta: 'Handover workflow · Jun 1, 02:14',
-    unread: true,
-  },
-  {
-    id: 'sensor-sigint',
-    title: 'Watch stander WS-0047 exceeded max consecutive hours.',
-    meta: 'Roster workflow · Jun 1, 02:14',
-    unread: true,
-  },
-  {
-    id: 'security-bump-1',
-    title: 'Requires supervisor sign-off on the Watch Bill',
-    meta: 'Watch Bill workflow · Approved June 1, 02:14',
-    unread: false,
-  },
-  {
-    id: 'security-bump-2',
-    title: 'Requires supervisor sign-off on the Watch Bill',
-    meta: 'Watch Bill workflow · Approved June 1, 02:14',
-    unread: false,
-  },
-]
+// Meta line under a review item's title. Once the item has been approved or
+// rejected in its touchpoint tab, the workflow/timestamp line is replaced by
+// the decision and when it was made.
+export function ReviewMeta({ item, review, className = 'wa-inbox-meta' }) {
+  if (!review) return <span className={className}>{item.meta}</span>
+  const approved = review.decision === 'approved'
+  return (
+    <span className={`${className} wa-review-decision ${review.decision}`}>
+      <Icon icon={approved ? 'tick' : 'cross'} size={12} />
+      <span className="wa-review-decision-label">{approved ? 'Approved' : 'Rejected'}</span>
+      {' · '}
+      {formatListTime(review.at)}
+    </span>
+  )
+}
 
+<<<<<<< HEAD
 export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, approvedTouchpoints }) {
   const [filter, setFilter] = useState('all')
 
@@ -50,6 +36,11 @@ export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, approve
   })
 
   const visible = filter === 'unread' ? ITEMS_WITH_APPROVAL.filter((i) => i.unread) : ITEMS_WITH_APPROVAL
+=======
+export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, reviews }) {
+  const [filter, setFilter] = useState('all')
+  const visible = filter === 'unread' ? INBOX_ITEMS.filter((i) => i.unread) : INBOX_ITEMS
+>>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
 
   return (
     <div className="wa-side-panel">
@@ -77,12 +68,20 @@ export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, approve
 
       <div className="wa-inbox-list">
         {visible.map((item) => {
+<<<<<<< HEAD
           const isApproved = approvedTouchpoints?.has(item.id)
+=======
+          const review = reviews?.[item.id]
+>>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
           return (
             <button
               type="button"
               key={item.id}
+<<<<<<< HEAD
               className={`wa-inbox-item ${item.unread ? 'unread' : ''}`}
+=======
+              className={`wa-inbox-item ${item.unread ? 'unread' : ''} ${review ? `is-${review.decision}` : ''}`}
+>>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
               onMouseEnter={(e) => onHover?.(item.id, e.currentTarget)}
               onMouseLeave={() => onHoverEnd?.()}
               onClick={() => onOpen?.(item.id)}
@@ -90,6 +89,7 @@ export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, approve
               <DottedCircleIcon className="wa-inbox-icon" />
               <span className="wa-inbox-body">
                 <span className="wa-inbox-title">{item.title}</span>
+<<<<<<< HEAD
                 <span className="wa-inbox-meta">
                   {isApproved ? (
                     <Tag intent="success" icon="tick" minimal>
@@ -99,6 +99,9 @@ export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, approve
                     item.meta
                   )}
                 </span>
+=======
+                <ReviewMeta item={item} review={review} />
+>>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
               </span>
               {item.unread && <span className="wa-inbox-dot" />}
             </button>

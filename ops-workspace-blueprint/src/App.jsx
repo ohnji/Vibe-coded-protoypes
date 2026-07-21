@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Button,
   Card,
@@ -16,7 +16,7 @@ import {
 } from '@blueprintjs/core'
 import { AgentAvatar, DottedCircleIcon, SparkleIcon } from './icons'
 import HandoverLog from './HandoverLog'
-import InboxPanel from './InboxPanel'
+import InboxPanel, { ReviewMeta } from './InboxPanel'
 import ActivityPanel from './ActivityPanel'
 import ActivityDrawer from './ActivityDrawer'
 import WorkspaceContextPanel from './WorkspaceContextPanel'
@@ -27,6 +27,8 @@ import AgentSession from './AgentSession'
 import AgentPopover from './AgentPopover'
 import { TOUCHPOINTS } from './touchpoints'
 import { AGENT_INFO } from './agentInfo'
+import { REVIEW_ITEMS } from './inbox'
+import ReportDocument, { SITE2_REPORT } from './ReportDocument'
 import './App.css'
 
 const COLUMNS = [
@@ -145,23 +147,6 @@ const COLUMNS = [
   },
 ]
 
-const REVIEW_ITEMS = [
-  {
-    id: 'weather-station',
-    title: 'Watch post at Site 2 reporting no check-in, review before CONFIRM COVERAGE',
-    meta: 'Coverage Check Workflow · Paused 50m ago · Triggered by…',
-  },
-  {
-    id: 'equipment-report',
-    title: 'Equipment report ready for your review',
-    meta: 'Relief Checklist Workflow · Paused 50m ago · Triggered by…',
-  },
-  {
-    id: 'coverage-gap',
-    title: 'Coverage gap flagged for 0400–0800 block. Ready for your review',
-    meta: 'Coverage Check Workflow · Paused 50m ago · Triggered by…',
-  },
-]
 
 const DEFAULT_TABS = [
   { id: 'handover', kind: 'handover', title: 'Handover Log', icon: 'home' },
@@ -211,7 +196,7 @@ function useToast() {
   }
 }
 
-function KanbanCard({ card, askOpenKey, onAskOpen, onAskClose, onAction, onInspect, onWorkHoverStart, onWorkHoverEnd, cardKey }) {
+function KanbanCard({ card, askOpenKey, onAskOpen, onAskClose, onAskSend, onAction, onInspect, onWorkHoverStart, onWorkHoverEnd, cardKey }) {
   const isWorking = !!card.work
   const isOpen = askOpenKey === cardKey
 
@@ -238,7 +223,7 @@ function KanbanCard({ card, askOpenKey, onAskOpen, onAskClose, onAction, onInspe
       content={
         <AskPanel
           card={card}
-          onSend={() => onAskClose()}
+          onSend={(question) => onAskSend(question, card)}
         />
       }
     >
@@ -271,9 +256,17 @@ function KanbanCard({ card, askOpenKey, onAskOpen, onAskClose, onAction, onInspe
   )
 }
 
+// Right-click → "Ask workspace agent". Starts empty so the user types their
+// own question; sending hands it to the workspace agent chat in the side panel.
 function AskPanel({ card, onSend }) {
-  const [value, setValue] = useState(SAMPLE_QUESTIONS[card.kind] || 'Can you find all events that are relevant to this one?')
-  const toast = useToast()
+  const [value, setValue] = useState('')
+
+  const submit = () => {
+    const question = value.trim()
+    if (!question) return
+    onSend(question)
+  }
+
   return (
     <div className="wa-ask-panel">
       <div className="wa-ask-head">
@@ -283,17 +276,22 @@ function AskPanel({ card, onSend }) {
       <TextArea
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        placeholder={SAMPLE_QUESTIONS[card.kind] || 'Ask the workspace agent…'}
         fill
         autoResize
         autoFocus
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault()
+            submit()
+          }
+        }}
       />
       <button
         type="button"
         className="wa-ask-send"
-        onClick={() => {
-          toast(`Asked: "${value}"`)
-          onSend()
-        }}
+        onClick={submit}
+        disabled={!value.trim()}
         aria-label="Send"
       >
         <Icon icon="send-message" size={12} />
@@ -378,18 +376,32 @@ function Typewriter({ text, speed = 16, onDone }) {
   return <>{shown}</>
 }
 
-// The workspace agent's opening report. Streams in when the workspace opens:
-// each paragraph types out, and the bullets / review items fade in on a
-// stagger once the paragraph above them has finished.
-function AgentWelcome({ toast, onHoverStart, onHoverEnd, onOpen }) {
+const WELCOME_GREETING = "Welcome back Alex, here's what happened while you were away."
+const WELCOME_REVIEW_LINE = 'The following items needs your review'
+
+// The workspace agent's opening report. Streams in the first time the
+// workspace is opened: each paragraph types out, and the bullets / review
+// items fade in on a stagger once the paragraph above them has finished.
+//
+// `streamed` records whether that intro has already played. The panel
+// unmounts whenever the user switches to another tab or rail section, so
+// without it the animation would replay on every return; when it's set the
+// content mounts fully rendered instead.
+function AgentWelcome({ toast, onHoverStart, onHoverEnd, onOpen, streamed, onStreamed, reviews, children }) {
   // 0 typing greeting · 1 bullets · 2 typing review line · 3 review items
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(streamed ? 3 : 0)
+  const animate = !streamed
 
   useEffect(() => {
     if (step !== 1) return
     const timer = setTimeout(() => setStep(2), 1100)
     return () => clearTimeout(timer)
   }, [step])
+
+  // Remember that the intro finished, so later mounts skip straight to the end.
+  useEffect(() => {
+    if (step >= 3) onStreamed?.()
+  }, [step, onStreamed])
 
   return (
     <div className="wa-welcome">
@@ -400,24 +412,28 @@ function AgentWelcome({ toast, onHoverStart, onHoverEnd, onOpen }) {
         </div>
 
         <p className="wa-msg">
-          <Typewriter
-            text="Welcome back Alex, here's what happened while you were away."
-            onDone={() => setStep((s) => (s === 0 ? 1 : s))}
-          />
+          {animate ? (
+            <Typewriter
+              text={WELCOME_GREETING}
+              onDone={() => setStep((s) => (s === 0 ? 1 : s))}
+            />
+          ) : (
+            WELCOME_GREETING
+          )}
           {step === 0 && <span className="wa-stream-caret" />}
         </p>
 
         {step >= 1 && (
           <ul className="wa-list">
-            <li className="wa-stream-in" style={{ animationDelay: '0ms' }}>
+            <li className={animate ? 'wa-stream-in' : undefined} style={animate ? { animationDelay: '0ms' } : undefined}>
               <a href="#" onClick={(e) => { e.preventDefault(); toast('Opening WS-0031') }}>WS-0031</a>{' '}
               completed the relief checklist and is the leading item awaiting OOD sign-off.
             </li>
-            <li className="wa-stream-in" style={{ animationDelay: '300ms' }}>
+            <li className={animate ? 'wa-stream-in' : undefined} style={animate ? { animationDelay: '300ms' } : undefined}>
               <a href="#" onClick={(e) => { e.preventDefault(); toast('Opening WS-0047') }}>WS-0047</a>{' '}
               underperformed against the standard handover window — the agent logged a note flagging the delay.
             </li>
-            <li className="wa-stream-in" style={{ animationDelay: '600ms' }}>
+            <li className={animate ? 'wa-stream-in' : undefined} style={animate ? { animationDelay: '600ms' } : undefined}>
               The Coverage Agent auto-flagged the 0400–0800 block after staffing fell below the minimum threshold.
             </li>
           </ul>
@@ -425,37 +441,115 @@ function AgentWelcome({ toast, onHoverStart, onHoverEnd, onOpen }) {
 
         {step >= 2 && (
           <p className="wa-msg">
-            <Typewriter
-              text="The following items needs your review"
-              onDone={() => setStep((s) => (s === 2 ? 3 : s))}
-            />
+            {animate ? (
+              <Typewriter
+                text={WELCOME_REVIEW_LINE}
+                onDone={() => setStep((s) => (s === 2 ? 3 : s))}
+              />
+            ) : (
+              WELCOME_REVIEW_LINE
+            )}
             {step === 2 && <span className="wa-stream-caret" />}
           </p>
         )}
 
         {step >= 3 && (
           <div className="wa-review-items">
-            {REVIEW_ITEMS.map((item, i) => (
-              <Card
-                key={item.id}
-                interactive
-                className="wa-review-item wa-stream-in"
-                style={{ animationDelay: `${i * 220}ms` }}
-                onMouseEnter={(e) => onHoverStart(item.id, e.currentTarget)}
-                onMouseLeave={onHoverEnd}
-                onClick={() => onOpen(item.id)}
-              >
-                <DottedCircleIcon className="wa-review-icon" />
-                <div className="wa-review-body">
-                  <span className="wa-review-title">{item.title}</span>
-                  <span className="wa-review-meta">{item.meta}</span>
-                </div>
-                <span className="wa-review-dot" />
-              </Card>
-            ))}
+            {REVIEW_ITEMS.map((item, i) => {
+              const review = reviews?.[item.id]
+              return (
+                <Card
+                  key={item.id}
+                  interactive
+                  className={`wa-review-item ${animate ? 'wa-stream-in' : ''} ${review ? `is-${review.decision}` : ''}`}
+                  style={animate ? { animationDelay: `${i * 220}ms` } : undefined}
+                  onMouseEnter={(e) => onHoverStart(item.id, e.currentTarget)}
+                  onMouseLeave={onHoverEnd}
+                  onClick={() => onOpen(item.id)}
+                >
+                  <DottedCircleIcon className="wa-review-icon" />
+                  <div className="wa-review-body">
+                    <span className="wa-review-title">{item.title}</span>
+                    <ReviewMeta item={item} review={review} className="wa-review-meta" />
+                  </div>
+                  <span className="wa-review-dot" />
+                </Card>
+              )
+            })}
           </div>
         )}
+
+        {children}
       </div>
+    </div>
+  )
+}
+
+// The agent's reply to an "ask" — a short line, then its tool-use steps
+// revealed one at a time, and finally the report it found opens in a new tab.
+const ASK_STEPS = [
+  { icon: 'search', label: 'Searching relevant reports', detail: 'Matched the record against reports filed in the last 24 hours.' },
+  { icon: 'document-open', label: 'Opening up the reports', detail: 'Site 2 - Weather Station Outage Report is the closest match.' },
+]
+
+function AskReply({ message, onOpenReport }) {
+  const [revealed, setRevealed] = useState(message.done ? ASK_STEPS.length : 0)
+  const openedRef = useRef(message.done)
+
+  useEffect(() => {
+    if (revealed >= ASK_STEPS.length) return
+    const timer = setTimeout(() => setRevealed((n) => n + 1), revealed === 0 ? 700 : 900)
+    return () => clearTimeout(timer)
+  }, [revealed])
+
+  // Once the last step lands, pull the report up in its own tab.
+  useEffect(() => {
+    if (revealed < ASK_STEPS.length || openedRef.current) return
+    openedRef.current = true
+    const timer = setTimeout(() => onOpenReport(), 500)
+    return () => clearTimeout(timer)
+  }, [revealed, onOpenReport])
+
+  return (
+    <div className="wa-chat-agent">
+      <div className="wa-agent-name">
+        <SparkleIcon color="#ec9a3c" />
+        Watch Schedule - 82nd Agent
+      </div>
+      <p className="wa-msg">Sure, opening up the recent reports..</p>
+      {ASK_STEPS.slice(0, revealed).map((step) => (
+        <AskReplyStep step={step} key={step.label} />
+      ))}
+    </div>
+  )
+}
+
+function AskReplyStep({ step }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="wa-chat-step wa-stream-in">
+      <button type="button" className="wa-chat-step-row" onClick={() => setOpen((o) => !o)}>
+        <Icon icon={step.icon} size={14} className="wa-chat-step-icon" />
+        <span className="wa-chat-step-label">{step.label}</span>
+        <Icon icon="chevron-right" size={14} className={`wa-chat-step-caret ${open ? 'flip' : ''}`} />
+      </button>
+      {open && <div className="wa-chat-step-detail">{step.detail}</div>}
+    </div>
+  )
+}
+
+// The conversation that builds up under the agent's opening report.
+function ChatThread({ messages, onOpenReport }) {
+  if (!messages.length) return null
+  return (
+    <div className="wa-chat-thread">
+      {messages.map((m) =>
+        m.role === 'user' ? (
+          <div className="wa-chat-user" key={m.id}>{m.text}</div>
+        ) : (
+          <AskReply message={m} key={m.id} onOpenReport={onOpenReport} />
+        )
+      )}
     </div>
   )
 }
@@ -478,13 +572,64 @@ export default function App() {
   const agentHoverTimer = useRef(null)
   const [hoverWork, setHoverWork] = useState(null)
   const workHoverTimer = useRef(null)
+<<<<<<< HEAD
   const [approvedTouchpoints, setApprovedTouchpoints] = useState(new Set(['security-bump-1', 'security-bump-2']))
+=======
+  // Review decisions by touchpoint id — { decision: 'approved' | 'rejected', at: Date }.
+  // Lives here so the Inbox and "needs your review" lists reflect what was
+  // approved inside a touchpoint tab.
+  const [reviews, setReviews] = useState({})
+  const handleDecide = useCallback((id, decision) => {
+    setReviews((prev) => {
+      if (!decision) {
+        const { [id]: _removed, ...rest } = prev
+        return rest
+      }
+      return { ...prev, [id]: { decision, at: new Date() } }
+    })
+  }, [])
+  // Survives the agent panel unmounting, so the intro only streams once.
+  const welcomeStreamedRef = useRef(false)
+  const markWelcomeStreamed = useCallback(() => {
+    welcomeStreamedRef.current = true
+  }, [])
+  // Workspace agent conversation, started by "Ask workspace agent".
+  const [chat, setChat] = useState([])
+  const chatSeq = useRef(0)
+>>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
   const toast = useToast()
 
   const handleAskOpen = (key, fromCardClick) => {
     setAskOpenKey(key)
   }
   const handleAskClose = () => setAskOpenKey(null)
+
+  // "Ask workspace agent" → drop the question into the side-panel chat and
+  // switch the rail to the agent so the user sees the reply come back.
+  const handleAskSend = (question) => {
+    setAskOpenKey(null)
+    setRail('agent')
+    setPanelCollapsed(false)
+    const n = chatSeq.current
+    chatSeq.current += 2
+    setChat((prev) => [
+      ...prev.map((m) => (m.role === 'agent' ? { ...m, done: true } : m)),
+      { id: `u${n}`, role: 'user', text: question },
+      { id: `a${n}`, role: 'agent' },
+    ])
+  }
+
+  // The agent's last step: open the report it found in its own tab.
+  const handleOpenReport = useCallback(() => {
+    const reportTabId = `report-${SITE2_REPORT.id}`
+    setTabs((prev) => (
+      prev.some((t) => t.id === reportTabId)
+        ? prev
+        : [...prev, { id: reportTabId, kind: 'report', title: SITE2_REPORT.tabTitle, closable: true }]
+    ))
+    setTab(reportTabId)
+  }, [])
+
   const handleCardAction = (label, card) => toast(`${label} ${card.id}`)
   const handleInspect = (target) => {
     setAskOpenKey(null)
@@ -561,6 +706,17 @@ export default function App() {
   // hiding one without the other leaves an orphaned 400px header strip.
   const panelHidden = panelCollapsed
 
+  // The deployed site sits the landing page beside this app
+  // (…/blueprint/ -> …/agent/), mirroring WATCH_SCHEDULE_URL on the landing
+  // side. Only that layout has an /agent/ route, so guard the dev server.
+  const goToLanding = () => {
+    if (window.location.pathname.includes('/blueprint/')) {
+      window.location.href = '../agent/'
+    } else {
+      toast('The landing page is only available in the deployed build')
+    }
+  }
+
   return (
     <div className="bp6-dark wa-app">
       <div className="wa-titlebar">
@@ -577,7 +733,14 @@ export default function App() {
             title={panelCollapsed ? 'Show side panel' : 'Hide side panel'}
             onClick={() => setPanelCollapsed((c) => !c)}
           />
-          <Button minimal small icon="chevron-left" onClick={() => toast('No back history')} />
+          <Button
+            minimal
+            small
+            icon="chevron-left"
+            aria-label="Back to landing"
+            title="Back to landing"
+            onClick={goToLanding}
+          />
           <Button minimal small icon="chevron-right" onClick={() => toast('No forward history')} />
         </div>
         <Button minimal className="wa-title" rightIcon="chevron-down" onClick={() => toast('Workspace switcher is not available in this prototype')}>
@@ -651,6 +814,8 @@ export default function App() {
                           <DottedCircleIcon size={13} />
                         ) : t.kind === 'session' ? (
                           <SparkleIcon size={13} color="#ec9a3c" />
+                        ) : t.kind === 'report' ? (
+                          <Icon icon="document" />
                         ) : (
                           <Icon icon={t.icon} />
                         )}
@@ -681,7 +846,12 @@ export default function App() {
                     onHoverStart={handleTPHoverStart}
                     onHoverEnd={handleTPHoverEnd}
                     onOpen={handleOpenTouchpoint}
-                  />
+                    streamed={welcomeStreamedRef.current}
+                    onStreamed={markWelcomeStreamed}
+                    reviews={reviews}
+                  >
+                    <ChatThread messages={chat} onOpenReport={handleOpenReport} />
+                  </AgentWelcome>
 
                   <ChatInput toast={toast} />
                 </>
@@ -692,7 +862,11 @@ export default function App() {
                   onHover={handleTPHoverStart}
                   onHoverEnd={handleTPHoverEnd}
                   onOpen={handleOpenTouchpoint}
+<<<<<<< HEAD
                   approvedTouchpoints={approvedTouchpoints}
+=======
+                  reviews={reviews}
+>>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
                 />
               )}
               {rail === 'activity' && <ActivityPanel toast={toast} />}
@@ -708,11 +882,18 @@ export default function App() {
                 touchpoint={TOUCHPOINTS[tabs.find((t) => t.id === tab)?.touchpointId]}
                 onOpenSession={handleOpenSession}
                 toast={toast}
+<<<<<<< HEAD
                 isApproved={approvedTouchpoints.has(tabs.find((t) => t.id === tab)?.touchpointId)}
                 onApprove={handleApproveTouchpoint}
+=======
+                review={reviews[tabs.find((t) => t.id === tab)?.touchpointId]}
+                onDecide={handleDecide}
+>>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
               />
             ) : tab.startsWith('session-') ? (
               <AgentSession key={tab} session={tabs.find((t) => t.id === tab)?.session} toast={toast} />
+            ) : tab.startsWith('report-') ? (
+              <ReportDocument toast={toast} />
             ) : (
               <section className="wa-board">
                 {COLUMNS.map((col) => (
@@ -740,6 +921,7 @@ export default function App() {
                               askOpenKey={askOpenKey}
                               onAskOpen={handleAskOpen}
                               onAskClose={handleAskClose}
+                              onAskSend={handleAskSend}
                               onAction={handleCardAction}
                               onInspect={handleInspect}
                               onWorkHoverStart={handleWorkHoverStart}
@@ -800,9 +982,15 @@ export default function App() {
               })}
             </div>
             <div className="wa-status-right">
-              <Tag minimal round className="wa-count warn">0</Tag>
-              <Tag minimal round className="wa-count info">1</Tag>
-              <Tag minimal round className="wa-count ok">0</Tag>
+              <span className="wa-count warn" title="Needs attention">
+                <Icon icon="error" size={14} />0
+              </span>
+              <span className="wa-count info" title="In progress">
+                <Icon icon="refresh" size={14} />1
+              </span>
+              <span className="wa-count done" title="Completed">
+                <Icon icon="tick-circle" size={14} />0
+              </span>
               <Button
                 minimal
                 small
