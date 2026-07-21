@@ -74,6 +74,9 @@
 .wa-tab-bar { height: 38px; flex: none; display: flex; align-items: stretch; background: #14171c; border-bottom: 1px solid var(--wa-border); }
 .wa-tab-bar-left { flex: 0 0 400px; width: 400px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 10px; border-right: 1px solid var(--wa-border); }
 .wa-tab-bar-left-actions { display: flex; align-items: center; gap: 2px; }
+/* Titlebar sidebar toggle — the persistent way back once the panel (header
+   included) is fully collapsed. */
+.wa-panel-toggle.active .bp6-icon { color: var(--wa-accent-light) !important; }
 .wa-branch-select { font-size: 13px !important; }
 .wa-tabs { display: flex; align-items: center; gap: 2px; padding: 0 10px; flex: 1; min-width: 0; overflow-x: auto; }
 .wa-tab-title { display: flex; align-items: center; gap: 6px; font-size: 13px; }
@@ -248,6 +251,26 @@
 @keyframes wa-caret-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* Streaming welcome message — blinking caret while a line types out, and a
+   staggered fade-up for the blocks that follow it. */
+.wa-stream-caret {
+  display: inline-block; width: 2px; height: 13px; margin-left: 2px;
+  vertical-align: text-bottom; background: var(--wa-accent-light);
+  animation: wa-caret-blink 1s step-end infinite;
+}
+.wa-stream-in {
+  opacity: 0;
+  animation: wa-stream-in 260ms ease-out forwards;
+}
+@keyframes wa-stream-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wa-stream-in { animation-duration: 1ms; animation-delay: 0ms !important; }
+  .wa-stream-caret { animation: none; }
 }
 
 .wa-group .bp6-tag { min-width: 20px; }
