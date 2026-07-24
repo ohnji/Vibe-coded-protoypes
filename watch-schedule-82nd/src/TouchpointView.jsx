@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Button, Icon } from '@blueprintjs/core'
 import SatelliteMap from './SatelliteMap'
-import { DottedCircleIcon } from './icons'
-import { formatHeaderTime } from './format'
+import { DottedCircleIcon, AgentAvatar } from './icons'
 
 // The embedded-app menu bar that sits on top of the map, matching the mock:
 // document name + favorite + status pills, then a File/Edit/View… menu row.
@@ -146,8 +145,72 @@ function ProcessStep({ step, touchpoint, onOpenSession, toast }) {
   )
 }
 
+// Unique agent names in the order they act, drawn from each process step's
+// "Name · Agent · time" meta — used to populate the Overview tab's Agents row.
+function getProcessAgents(touchpoint) {
+  const names = []
+  touchpoint.process.forEach((step) => {
+    if (!step.meta || !step.meta.includes(' · Agent · ')) return
+    const agent = step.meta.split(' · ')[0]
+    if (agent && !names.includes(agent)) names.push(agent)
+  })
+  return names
+}
+
+function OverviewTab({ touchpoint }) {
+  const agents = getProcessAgents(touchpoint)
+  const shown = agents.slice(0, 2)
+  const rest = agents.length - shown.length
+
+  return (
+    <div className="tp-overview">
+      <div className="tp-overview-section">
+        <div className="tp-overview-label">Summary</div>
+        <p className="tp-overview-summary">{touchpoint.previewNote}</p>
+      </div>
+
+      <div className="tp-overview-section">
+        <div className="tp-overview-label">Agents</div>
+        <div className="tp-overview-agents">
+          {shown.map((name) => (
+            <AgentAvatar name={name} size={16} key={name} />
+          ))}
+          <span className="tp-overview-agents-names">
+            {shown.join(', ')}
+            {rest > 0 && `, +${rest}`}
+          </span>
+        </div>
+      </div>
+
+      <div className="tp-overview-section">
+        <div className="tp-overview-label">Reviewer</div>
+        <div className="tp-overview-reviewer">
+          <span className="wa-avatar-chip wa-avatar-purple">AL</span>
+          <span>Alex</span>
+        </div>
+      </div>
+
+      {touchpoint.resources && (
+        <div className="tp-overview-section">
+          <div className="tp-overview-label">Resources updated</div>
+          <div className="tp-overview-resources">
+            {touchpoint.resources.map((r, i) => (
+              <div className="tp-overview-resource" key={i}>
+                <Icon icon="cube" size={14} className="tp-overview-resource-icon" />
+                <span className="tp-overview-resource-name">{r.name}</span>
+                <span className="tp-overview-resource-kind">{r.kind}</span>
+                {r.status && <span className="tp-overview-resource-status">{r.status}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function TouchpointView({ touchpoint, onOpenSession, toast, review, onDecide }) {
-  const [processTab, setProcessTab] = useState('process')
+  const [processTab, setProcessTab] = useState('overview')
   if (!touchpoint) return null
 
   // The decision lives in App so the Inbox / review lists reflect it too.
@@ -175,11 +238,6 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast, revie
           <Button minimal small icon="more" onClick={() => toast('More actions')} aria-label="More" />
           {decision ? (
             <>
-              <span className={`tp-decision-pill ${decision}`}>
-                <Icon icon={approved ? 'tick' : 'cross'} size={12} />
-                {approved ? 'Approved' : 'Rejected'}
-                {review?.at && ` · ${formatHeaderTime(review.at)}`}
-              </span>
               <Button
                 minimal
                 small
@@ -189,6 +247,14 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast, revie
                 }}
               >
                 Undo
+              </Button>
+              <Button
+                small
+                disabled
+                intent={approved ? 'success' : 'danger'}
+                icon={approved ? 'tick' : 'cross'}
+              >
+                {approved ? 'Approved' : 'Rejected'}
               </Button>
             </>
           ) : (
@@ -278,6 +344,13 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast, revie
           <div className="tp-side-tabs">
             <button
               type="button"
+              className={`tp-side-tab ${processTab === 'overview' ? 'active' : ''}`}
+              onClick={() => setProcessTab('overview')}
+            >
+              Overview
+            </button>
+            <button
+              type="button"
               className={`tp-side-tab ${processTab === 'process' ? 'active' : ''}`}
               onClick={() => setProcessTab('process')}
             >
@@ -295,7 +368,9 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast, revie
             </button>
           </div>
 
-          {processTab === 'process' ? (
+          {processTab === 'overview' ? (
+            <OverviewTab touchpoint={touchpoint} />
+          ) : processTab === 'process' ? (
             <div className="tp-process">
               {touchpoint.process.map((step, i) =>
                 step.group ? (

@@ -5,7 +5,7 @@
 export const INBOX_ITEMS = [
   {
     id: 'suspicious-activity',
-    title: 'Three posts on the North watch line missed check-in. Do you want to open a report?',
+    title: 'Abnormal activity detected on the North watch line — 3 posts missed check-in, agents are flagging for review',
     meta: 'Coverage workflow · Jun 1, 02:14',
     unread: true,
   },

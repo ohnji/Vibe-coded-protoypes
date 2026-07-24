@@ -647,6 +647,7 @@ button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: i
 .wa-inbox-item.unread { background: rgba(45,114,210,0.08); border-color: rgba(45,114,210,0.2); }
 .wa-inbox-item:hover { border-color: var(--wa-accent-light); }
 .wa-inbox-icon { color: var(--wa-orange) !important; flex: none; margin-top: 3px; }
+.wa-inbox-icon-approved { color: var(--wa-text-faint) !important; }
 .wa-inbox-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .wa-inbox-title { font-size: 13px; line-height: 18px; }
 .wa-inbox-item:not(.unread) .wa-inbox-title { color: var(--wa-text-dim); }
@@ -901,8 +902,7 @@ button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: i
   display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--wa-text-dim);
   border: 1px solid var(--wa-border-strong); padding: 2px 8px; border-radius: 5px;
 }
-.tp-process-step { position: relative; padding-left: 10px; margin-bottom: 10px; border-left: 2px solid var(--wa-border-strong); }
-.tp-process-step:last-child { border-left-color: transparent; }
+.tp-process-step { position: relative; margin-bottom: 10px; }
 .tp-process-badge {
   display: inline-block; margin: 0 0 6px 2px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
   color: var(--wa-accent-light); background: rgba(138,187,255,0.12); padding: 2px 8px; border-radius: 4px;
@@ -922,16 +922,28 @@ button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: i
 .tp-process-caret.flip { transform: rotate(180deg); }
 .tp-process-empty { padding: 20px 16px; font-size: 13px; color: var(--wa-text-faint); }
 
+/* ---------- Touchpoint Overview tab ---------- */
+.tp-overview { padding: 16px 14px; display: flex; flex-direction: column; overflow-y: auto; }
+.tp-overview-section { display: flex; flex-direction: column; gap: 8px; padding: 18px 0; }
+.tp-overview-section:first-child { padding-top: 0; }
+.tp-overview-section:not(:first-child) { border-top: 1px solid var(--wa-border); }
+.tp-overview-label { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: var(--wa-text-faint); text-transform: uppercase; }
+.tp-overview-summary { margin: 0; font-size: 13px; line-height: 19px; color: var(--wa-text-dim); }
+.tp-overview-agents, .tp-overview-reviewer { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #f6f7f9; }
+.tp-overview-agents .wa-agent-avatar:not(:first-child) { margin-left: -6px; border: 2px solid var(--wa-panel-bg); border-radius: 50%; }
+.tp-overview-resources { border: 1px solid var(--wa-border); border-radius: 6px; overflow: hidden; }
+.tp-overview-resource {
+  display: flex; align-items: center; gap: 8px; padding: 9px 11px; font-size: 12.5px; color: #f6f7f9;
+}
+.tp-overview-resource + .tp-overview-resource { border-top: 1px solid var(--wa-border); }
+.tp-overview-resource-icon { color: var(--wa-accent-light); flex: none; }
+.tp-overview-resource-name { color: var(--wa-accent-light); }
+.tp-overview-resource-kind { color: var(--wa-text-faint); }
+.tp-overview-resource-status { margin-left: auto; font-size: 11px; color: var(--wa-text-faint); }
+
 /* ---------- Touchpoint decision (approved / rejected) ---------- */
 .tp-decision-icon.approved { color: var(--wa-green) !important; }
 .tp-decision-icon.rejected { color: var(--wa-red) !important; }
-.tp-decision-pill {
-  display: inline-flex; align-items: center; gap: 5px; flex: none;
-  font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
-}
-.tp-decision-pill.approved { background: rgba(163,220,190,0.15); color: var(--wa-green); }
-.tp-decision-pill.rejected { background: rgba(231,106,110,0.15); color: var(--wa-red); }
-.tp-decision-pill .bp6-icon { color: inherit !important; }
 
 .tp-approved-banner {
   display: flex; align-items: center; gap: 10px; margin: 0 20px 16px;

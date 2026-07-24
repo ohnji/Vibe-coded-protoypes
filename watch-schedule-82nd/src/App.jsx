@@ -514,6 +514,8 @@ export default function App() {
   // Lives here so the Inbox and "needs your review" lists reflect what was
   // approved inside a touchpoint tab.
   const [reviews, setReviews] = useState({})
+  // Ids of inbox items the user has opened — clears their unread dot.
+  const [readIds, setReadIds] = useState(() => new Set())
   const handleDecide = useCallback((id, decision) => {
     setReviews((prev) => {
       if (!decision) {
@@ -593,6 +595,7 @@ export default function App() {
   const handleOpenTouchpoint = (id) => {
     clearTimeout(hoverTimer.current)
     setHoverTP(null)
+    setReadIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
     const tpTabId = `tp-${id}`
     setTabs((prev) => (
       prev.some((t) => t.id === tpTabId)
@@ -799,6 +802,7 @@ export default function App() {
                   onHoverEnd={handleTPHoverEnd}
                   onOpen={handleOpenTouchpoint}
                   reviews={reviews}
+                  readIds={readIds}
                 />
               )}
               {rail === 'activity' && <ActivityPanel toast={toast} />}

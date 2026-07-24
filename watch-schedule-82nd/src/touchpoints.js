@@ -94,16 +94,22 @@ export const TOUCHPOINTS = {
   },
   'suspicious-activity': {
     id: 'suspicious-activity',
-    title: 'Three posts on the North watch line missed check-in. Do you want to open a report?',
+    title: 'Abnormal activity detected on the North watch line — 3 posts missed check-in, agents are flagging for review',
     timeAgo: 'Jun 1, 02:14',
     requestedNote: 'Agent flagged this 6m ago',
     agentName: 'Coverage agent',
     pausedAgo: '6m ago',
     triggeredBy: 'coverage alert',
-    previewNote: 'Three posts along the North watch line missed their scheduled check-in overnight. The agent has a draft incident report ready if you want to escalate to the watch supervisor.',
+    previewNote: 'Three posts along the North watch line missed their scheduled check-in overnight — an abnormal pattern the coverage agent picked up and flagged for review. A draft incident report is ready if you want to escalate to the watch supervisor.',
     tabTitle: 'North line check-in',
     map: { pins: CORRIDOR_PINS, inset: CORRIDOR_INSET },
-    process: GENERIC_PROCESS('coverage'),
+    resources: [
+      { name: 'Post 4', kind: 'Watch Post', status: 'Edited' },
+      { name: 'Post 7', kind: 'Watch Post' },
+    ],
+    process: GENERIC_PROCESS('coverage', {
+      found: { link: '3 posts', tail: ' reporting no check-in', recordsLabel: 'Posts (3)', recordName: 'Post 4', recordKind: 'Watch Post' },
+    }),
   },
   'rfi-draft': {
     id: 'rfi-draft',

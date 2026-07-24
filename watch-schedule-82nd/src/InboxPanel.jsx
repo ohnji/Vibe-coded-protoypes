@@ -13,14 +13,14 @@ export function ReviewMeta({ item, review, className = 'wa-inbox-meta' }) {
   return (
     <span className={`${className} wa-review-decision ${review.decision}`}>
       <Icon icon={approved ? 'tick' : 'cross'} size={12} />
-      <span className="wa-review-decision-label">{approved ? 'Approved' : 'Rejected'}</span>
+      <span className="wa-review-decision-label">{approved ? 'Approved' : 'Rejected'} by Alex</span>
       {' · '}
       {formatListTime(review.at)}
     </span>
   )
 }
 
-export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, reviews }) {
+export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, reviews, readIds }) {
   const [filter, setFilter] = useState('all')
   const visible = filter === 'unread' ? INBOX_ITEMS.filter((i) => i.unread) : INBOX_ITEMS
 
@@ -51,21 +51,26 @@ export default function InboxPanel({ toast, onHover, onHoverEnd, onOpen, reviews
       <div className="wa-inbox-list">
         {visible.map((item) => {
           const review = reviews?.[item.id]
+          const unread = item.unread && !readIds?.has(item.id)
           return (
             <button
               type="button"
               key={item.id}
-              className={`wa-inbox-item ${item.unread ? 'unread' : ''} ${review ? `is-${review.decision}` : ''}`}
+              className={`wa-inbox-item ${unread ? 'unread' : ''} ${review ? `is-${review.decision}` : ''}`}
               onMouseEnter={(e) => onHover?.(item.id, e.currentTarget)}
               onMouseLeave={() => onHoverEnd?.()}
               onClick={() => onOpen?.(item.id)}
             >
-              <DottedCircleIcon className="wa-inbox-icon" />
+              {review?.decision === 'approved' ? (
+                <Icon icon="tick-circle" size={16} className="wa-inbox-icon wa-inbox-icon-approved" />
+              ) : (
+                <DottedCircleIcon className="wa-inbox-icon" />
+              )}
               <span className="wa-inbox-body">
                 <span className="wa-inbox-title">{item.title}</span>
                 <ReviewMeta item={item} review={review} />
               </span>
-              {item.unread && <span className="wa-inbox-dot" />}
+              {unread && <span className="wa-inbox-dot" />}
             </button>
           )
         })}
