@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Icon, Tag } from '@blueprintjs/core'
+import { Button, Icon } from '@blueprintjs/core'
 import SatelliteMap from './SatelliteMap'
 import { DottedCircleIcon } from './icons'
 import { formatHeaderTime } from './format'
@@ -146,11 +146,7 @@ function ProcessStep({ step, touchpoint, onOpenSession, toast }) {
   )
 }
 
-<<<<<<< HEAD
-export default function TouchpointView({ touchpoint, onOpenSession, toast, isApproved, onApprove }) {
-=======
 export default function TouchpointView({ touchpoint, onOpenSession, toast, review, onDecide }) {
->>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
   const [processTab, setProcessTab] = useState('process')
   if (!touchpoint) return null
 
@@ -174,30 +170,9 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast, revie
             <DottedCircleIcon size={18} />
           )}
           <h2>{touchpoint.title}</h2>
-          {isApproved && (
-            <Tag intent="success" icon="tick" minimal style={{ marginLeft: '12px' }}>
-              Approved by Chris 1m ago
-            </Tag>
-          )}
         </div>
         <div className="tp-view-actions">
           <Button minimal small icon="more" onClick={() => toast('More actions')} aria-label="More" />
-<<<<<<< HEAD
-          <Button small onClick={() => toast('Rejected')}>Reject</Button>
-          <Button
-            small
-            intent="success"
-            icon="tick"
-            disabled={isApproved}
-            onClick={() => {
-              if (!isApproved) {
-                onApprove?.(touchpoint.id)
-              }
-            }}
-          >
-            {isApproved ? 'Approved' : 'Approve'}
-          </Button>
-=======
           {decision ? (
             <>
               <span className={`tp-decision-pill ${decision}`}>
@@ -229,7 +204,6 @@ export default function TouchpointView({ touchpoint, onOpenSession, toast, revie
               </Button>
             </>
           )}
->>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
         </div>
       </div>
       <div className="tp-view-meta">

@@ -572,9 +572,6 @@ export default function App() {
   const agentHoverTimer = useRef(null)
   const [hoverWork, setHoverWork] = useState(null)
   const workHoverTimer = useRef(null)
-<<<<<<< HEAD
-  const [approvedTouchpoints, setApprovedTouchpoints] = useState(new Set(['security-bump-1', 'security-bump-2']))
-=======
   // Review decisions by touchpoint id — { decision: 'approved' | 'rejected', at: Date }.
   // Lives here so the Inbox and "needs your review" lists reflect what was
   // approved inside a touchpoint tab.
@@ -596,7 +593,6 @@ export default function App() {
   // Workspace agent conversation, started by "Ask workspace agent".
   const [chat, setChat] = useState([])
   const chatSeq = useRef(0)
->>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
   const toast = useToast()
 
   const handleAskOpen = (key, fromCardClick) => {
@@ -673,11 +669,6 @@ export default function App() {
         : [...prev, { id: sessTabId, kind: 'session', title: session.title, session, closable: true }]
     ))
     setTab(sessTabId)
-  }
-
-  const handleApproveTouchpoint = (touchpointId) => {
-    setApprovedTouchpoints((prev) => new Set([...prev, touchpointId]))
-    toast('Approved')
   }
 
   const handleAgentHoverStart = (id, target) => {
@@ -862,11 +853,7 @@ export default function App() {
                   onHover={handleTPHoverStart}
                   onHoverEnd={handleTPHoverEnd}
                   onOpen={handleOpenTouchpoint}
-<<<<<<< HEAD
-                  approvedTouchpoints={approvedTouchpoints}
-=======
                   reviews={reviews}
->>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
                 />
               )}
               {rail === 'activity' && <ActivityPanel toast={toast} />}
@@ -882,13 +869,8 @@ export default function App() {
                 touchpoint={TOUCHPOINTS[tabs.find((t) => t.id === tab)?.touchpointId]}
                 onOpenSession={handleOpenSession}
                 toast={toast}
-<<<<<<< HEAD
-                isApproved={approvedTouchpoints.has(tabs.find((t) => t.id === tab)?.touchpointId)}
-                onApprove={handleApproveTouchpoint}
-=======
                 review={reviews[tabs.find((t) => t.id === tab)?.touchpointId]}
                 onDecide={handleDecide}
->>>>>>> e94f82a4d2d7f396c0ed9fa9a5ec491a54829662
               />
             ) : tab.startsWith('session-') ? (
               <AgentSession key={tab} session={tabs.find((t) => t.id === tab)?.session} toast={toast} />

@@ -22,7 +22,8 @@
       "Bash(npm install *)",
       "Bash(brew install *)",
       "Bash(curl -s \"https://api.github.com/repos/ohnji/Vibe-coded-protoypes/pulls?head=ohnji:ops-workspace-panel-collapse-streaming-welcome\")",
-      "Bash(ls -la ~/.ssh/ 2>/dev/null | head -10 || echo \"No SSH config found\")"
+      "Bash(ls -la ~/.ssh/ 2>/dev/null | head -10 || echo \"No SSH config found\")",
+      "Bash(gh auth *)"
     ]
   }
 }
