@@ -573,7 +573,7 @@ export default function App() {
 
   const handleCardAction = (label, card) => toast(`${label} ${card.id}`)
   const handleInspect = (target) => {
-    setAskOpenKey(null)
+    setAskTarget(null)
     setInspectTarget(target)
     setDrawerTab('inspect')
     setActivityOpen(true)
