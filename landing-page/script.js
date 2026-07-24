@@ -21,12 +21,12 @@ document.querySelectorAll('[data-toast]').forEach((el) => {
 const viewHome = document.getElementById('view-home');
 const viewWorkspace = document.getElementById('view-workspace');
 
-// URL of the standalone Ops Workspace (Blueprint) prototype. Clicking the
-// "Watch Schedule - 82nd" workspace opens that app rather than the built-in
-// mock workspace view. Relative so it resolves both locally and when the two
-// prototypes are hosted as sibling folders on GitHub Pages
-// (…/agent/ -> …/blueprint/).
-const WATCH_SCHEDULE_URL = '../blueprint/';
+// URL of the standalone Watch Schedule - 82nd workspace prototype. Clicking
+// the "Watch Schedule - 82nd" workspace opens that app rather than the
+// built-in mock workspace view. Relative so it resolves both locally and
+// when the two prototypes are hosted as sibling folders on GitHub Pages
+// (…/landing-page/ -> …/watch-schedule-82nd/).
+const WATCH_SCHEDULE_URL = '../watch-schedule-82nd/';
 
 function openWorkspace() {
   hidePopover();

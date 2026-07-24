@@ -4,28 +4,28 @@
     {
       "name": "agent-studio-landing",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "agent-studio-landing"],
+      "runtimeArgs": ["-y", "serve", "archive/agent-studio-landing"],
       "port": 4173,
       "autoPort": true
     },
     {
       "name": "danube-workflow-studio",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "danube-workflow-studio"],
+      "runtimeArgs": ["-y", "serve", "archive/danube-workflow-studio"],
       "port": 4174,
       "autoPort": true
     },
     {
       "name": "agent-studio-artifacts",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "agent-studio-artifacts"],
+      "runtimeArgs": ["-y", "serve", "archive/agent-studio-artifacts"],
       "port": 4175,
       "autoPort": true
     },
     {
       "name": "agent-studio-home",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "agent-studio-home"],
+      "runtimeArgs": ["-y", "serve", "archive/agent-studio-home"],
       "port": 4176,
       "autoPort": true
     },
@@ -37,16 +37,16 @@
       "autoPort": true
     },
     {
-      "name": "ops-workspace-agent",
+      "name": "landing-page",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "ops-workspace-agent"],
+      "runtimeArgs": ["-y", "serve", "landing-page"],
       "port": 8934,
       "autoPort": true
     },
     {
-      "name": "ops-workspace-blueprint",
+      "name": "watch-schedule-82nd",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "ops-workspace-blueprint", "--", "--port", "4177"],
+      "runtimeArgs": ["run", "dev", "--prefix", "watch-schedule-82nd", "--", "--port", "4177"],
       "port": 4177,
       "autoPort": true
     }
