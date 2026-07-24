@@ -8,13 +8,12 @@ import {
   MenuDivider,
   MenuItem,
   OverlayToaster,
-  Popover,
   Tab,
   Tabs,
   Tag,
-  TextArea,
 } from '@blueprintjs/core'
 import { AgentAvatar, DottedCircleIcon, SparkleIcon } from './icons'
+import { SAMPLE_QUESTIONS } from './askQuestions'
 import HandoverLog from './HandoverLog'
 import InboxPanel, { ReviewMeta } from './InboxPanel'
 import ActivityPanel from './ActivityPanel'
@@ -154,17 +153,6 @@ const DEFAULT_TABS = [
   { id: 'bill', kind: 'board', title: 'Watch Bill', icon: 'archive' },
 ]
 
-const SAMPLE_QUESTIONS = {
-  'RELIEF CHECKLIST': 'Can you find all events that are relevant to this one?',
-  'EQUIPMENT CHECK': 'What flagged this equipment check, and is it still open?',
-  'HANDOVER LOG': 'Summarize what changed in this handover log.',
-  'COVERAGE CHECK': 'Why was this coverage check flagged?',
-  'COVERAGE GAP': 'Who is responsible for closing this coverage gap?',
-  'LOG REVIEW': 'What is outstanding before this log review can close?',
-  'SIGN-OFF PENDING': 'Can you find all events that are relevant to this one?',
-  'TURNOVER REVIEW': 'What changed since the last turnover review?',
-}
-
 const RAIL_ITEMS = [
   { id: 'agent', icon: null, label: 'Agent panel' },
   { id: 'inbox', icon: 'inbox', label: 'Inbox' },
@@ -196,16 +184,16 @@ function useToast() {
   }
 }
 
-function KanbanCard({ card, askOpenKey, onAskOpen, onAskClose, onAskSend, onAction, onInspect, onWorkHoverStart, onWorkHoverEnd, cardKey }) {
+function KanbanCard({ card, askTarget, onAskOpen, onAction, onInspect, onWorkHoverStart, onWorkHoverEnd, cardKey }) {
   const isWorking = !!card.work
-  const isOpen = askOpenKey === cardKey
+  const isSelected = askTarget?.key === cardKey
 
   const menu = (
     <Menu>
       <MenuItem
         text="Ask workspace agent"
         icon="chat"
-        onClick={() => onAskOpen(cardKey)}
+        onClick={() => onAskOpen(cardKey, card)}
       />
       <MenuItem text="Inspect" icon="search" onClick={() => onInspect(card)} />
       <MenuDivider />
@@ -216,87 +204,31 @@ function KanbanCard({ card, askOpenKey, onAskOpen, onAskClose, onAskSend, onActi
   )
 
   return (
-    <Popover
-      isOpen={isOpen}
-      onClose={onAskClose}
-      placement="right-start"
-      content={
-        <AskPanel
-          card={card}
-          onSend={(question) => onAskSend(question, card)}
-        />
-      }
-    >
-      <ContextMenu content={menu}>
-        <Card
-          interactive
-          className={`wa-card ${isWorking ? 'is-working' : ''}`}
-          onClick={() => (isWorking ? onInspect(card) : onAskOpen(cardKey, true))}
-          onMouseEnter={isWorking ? (e) => onWorkHoverStart(cardKey, card, e.currentTarget) : undefined}
-          onMouseLeave={isWorking ? onWorkHoverEnd : undefined}
-        >
-          <Icon icon="cube" className="wa-card-icon" />
-          <div className="wa-card-body">
-            <span className="wa-card-title">
-              {card.id} / <strong>{card.kind}</strong>
-            </span>
-            <span className="wa-card-meta">
-              {isWorking ? `${AGENT_INFO[card.work.agent]?.name || 'Agent'} working…` : 'Last updated 6 min ago'}
-            </span>
-          </div>
-          <div className="wa-card-progress">
-            <span className="filled" />
-            <span className={isWorking ? 'filled' : ''} />
-            <span />
-          </div>
-          <span className="wa-card-tag">WATCH//82ND</span>
-        </Card>
-      </ContextMenu>
-    </Popover>
-  )
-}
-
-// Right-click → "Ask workspace agent". Starts empty so the user types their
-// own question; sending hands it to the workspace agent chat in the side panel.
-function AskPanel({ card, onSend }) {
-  const [value, setValue] = useState('')
-
-  const submit = () => {
-    const question = value.trim()
-    if (!question) return
-    onSend(question)
-  }
-
-  return (
-    <div className="wa-ask-panel">
-      <div className="wa-ask-head">
-        <SparkleIcon color="#ec9a3c" />
-        <span>{card.id} Agent</span>
-      </div>
-      <TextArea
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={SAMPLE_QUESTIONS[card.kind] || 'Ask the workspace agent…'}
-        fill
-        autoResize
-        autoFocus
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault()
-            submit()
-          }
-        }}
-      />
-      <button
-        type="button"
-        className="wa-ask-send"
-        onClick={submit}
-        disabled={!value.trim()}
-        aria-label="Send"
+    <ContextMenu content={menu}>
+      <Card
+        interactive
+        className={`wa-card ${isWorking ? 'is-working' : ''} ${isSelected ? 'is-ask-selected' : ''}`}
+        onClick={() => (isWorking ? onInspect(card) : onAskOpen(cardKey, card))}
+        onMouseEnter={isWorking ? (e) => onWorkHoverStart(cardKey, card, e.currentTarget) : undefined}
+        onMouseLeave={isWorking ? onWorkHoverEnd : undefined}
       >
-        <Icon icon="send-message" size={12} />
-      </button>
-    </div>
+        <Icon icon="cube" className="wa-card-icon" />
+        <div className="wa-card-body">
+          <span className="wa-card-title">
+            {card.id} / <strong>{card.kind}</strong>
+          </span>
+          <span className="wa-card-meta">
+            {isWorking ? `${AGENT_INFO[card.work.agent]?.name || 'Agent'} working…` : 'Last updated 6 min ago'}
+          </span>
+        </div>
+        <div className="wa-card-progress">
+          <span className="filled" />
+          <span className={isWorking ? 'filled' : ''} />
+          <span />
+        </div>
+        <span className="wa-card-tag">WATCH//82ND</span>
+      </Card>
+    </ContextMenu>
   )
 }
 
@@ -545,7 +477,10 @@ function ChatThread({ messages, onOpenReport }) {
     <div className="wa-chat-thread">
       {messages.map((m) =>
         m.role === 'user' ? (
-          <div className="wa-chat-user" key={m.id}>{m.text}</div>
+          <div className="wa-chat-user" key={m.id}>
+            {m.context && <span className="wa-chat-user-context">{m.context.label}</span>}
+            {m.text}
+          </div>
         ) : (
           <AskReply message={m} key={m.id} onOpenReport={onOpenReport} />
         )
@@ -560,7 +495,10 @@ export default function App() {
   const [tabs, setTabs] = useState(DEFAULT_TABS)
   const [tab, setTab] = useState('handover')
   const [pill, setPill] = useState('coverage')
-  const [askOpenKey, setAskOpenKey] = useState(null)
+  // The row/card currently selected for "Ask workspace agent" — { key, id, kind } | null.
+  // Selecting one highlights it and routes the question through the main chat
+  // input instead of an inline popover (inline positioning wasn't reliable).
+  const [askTarget, setAskTarget] = useState(null)
   const [activityOpen, setActivityOpen] = useState(false)
   const [activityView, setActivityView] = useState('status')
   const [drawerTab, setDrawerTab] = useState('monitoring')
@@ -595,22 +533,29 @@ export default function App() {
   const chatSeq = useRef(0)
   const toast = useToast()
 
-  const handleAskOpen = (key, fromCardClick) => {
-    setAskOpenKey(key)
+  // Selects a row/card as the ask target and jumps to the main chat so the
+  // user can type their question there, with the selection shown as context.
+  // `label` is the human-readable name shown in the chip/chat (e.g. a shift
+  // block); callers that don't have one fall back to the card's kind or id.
+  const handleAskOpen = (key, card) => {
+    setAskTarget({ key, id: card.id, kind: card.kind, label: card.label || card.kind || card.id })
+    setRail('agent')
+    setPanelCollapsed(false)
   }
-  const handleAskClose = () => setAskOpenKey(null)
+  const handleAskClose = () => setAskTarget(null)
 
-  // "Ask workspace agent" → drop the question into the side-panel chat and
-  // switch the rail to the agent so the user sees the reply come back.
+  // Sending from the main chat input → drop the question (tagged with
+  // whatever row/card was selected, if any) into the side-panel chat.
   const handleAskSend = (question) => {
-    setAskOpenKey(null)
+    const context = askTarget
+    setAskTarget(null)
     setRail('agent')
     setPanelCollapsed(false)
     const n = chatSeq.current
     chatSeq.current += 2
     setChat((prev) => [
       ...prev.map((m) => (m.role === 'agent' ? { ...m, done: true } : m)),
-      { id: `u${n}`, role: 'user', text: question },
+      { id: `u${n}`, role: 'user', text: question, context },
       { id: `a${n}`, role: 'agent' },
     ])
   }
@@ -844,7 +789,7 @@ export default function App() {
                     <ChatThread messages={chat} onOpenReport={handleOpenReport} />
                   </AgentWelcome>
 
-                  <ChatInput toast={toast} />
+                  <ChatInput toast={toast} askTarget={askTarget} onAskClear={handleAskClose} onSend={handleAskSend} />
                 </>
               )}
               {rail === 'inbox' && (
@@ -863,7 +808,12 @@ export default function App() {
             )}
 
             {tab === 'handover' ? (
-              <HandoverLog toast={toast} onInspect={handleInspect} />
+              <HandoverLog
+                toast={toast}
+                onInspect={handleInspect}
+                askTarget={askTarget}
+                onAskOpen={handleAskOpen}
+              />
             ) : tab.startsWith('tp-') ? (
               <TouchpointView
                 touchpoint={TOUCHPOINTS[tabs.find((t) => t.id === tab)?.touchpointId]}
@@ -900,10 +850,8 @@ export default function App() {
                               key={cardKey}
                               cardKey={cardKey}
                               card={card}
-                              askOpenKey={askOpenKey}
+                              askTarget={askTarget}
                               onAskOpen={handleAskOpen}
-                              onAskClose={handleAskClose}
-                              onAskSend={handleAskSend}
                               onAction={handleCardAction}
                               onInspect={handleInspect}
                               onWorkHoverStart={handleWorkHoverStart}
@@ -1028,7 +976,7 @@ export default function App() {
 // Custom chat input — matches the Figma mock exactly rather than default
 // Blueprint Button/TextArea styling (bordered icon squares, pill model
 // selector, solid-white send button).
-function ChatInput({ toast }) {
+function ChatInput({ toast, askTarget, onAskClear, onSend }) {
   const [value, setValue] = useState('')
   const taRef = useRef(null)
 
@@ -1039,17 +987,32 @@ function ChatInput({ toast }) {
     el.style.height = `${Math.min(el.scrollHeight, 160)}px`
   }
 
+  // Jumping here from "Ask workspace agent" on a row/card — put the cursor
+  // straight in the box so the user can start typing.
+  useEffect(() => {
+    if (askTarget) taRef.current?.focus()
+  }, [askTarget])
+
   return (
     <form
       className="wa-chat-input"
       onSubmit={(e) => {
         e.preventDefault()
         if (!value.trim()) return
-        toast('Asking the workspace agent…')
+        onSend(value.trim())
         setValue('')
         requestAnimationFrame(autosize)
       }}
     >
+      {askTarget && (
+        <div className="wa-chat-ask-context">
+          <Icon icon="cube" size={12} />
+          <span>{askTarget.label}</span>
+          <button type="button" className="wa-chat-ask-context-clear" onClick={onAskClear} aria-label="Clear selection">
+            <Icon icon="cross" size={12} />
+          </button>
+        </div>
+      )}
       <div className="wa-chat-box">
         <textarea
           ref={taRef}
@@ -1059,7 +1022,7 @@ function ChatInput({ toast }) {
             setValue(e.target.value)
             autosize()
           }}
-          placeholder="Ask the workspace agent…"
+          placeholder={askTarget ? SAMPLE_QUESTIONS[askTarget.kind] || 'Ask the workspace agent…' : 'Ask the workspace agent…'}
           rows={1}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {

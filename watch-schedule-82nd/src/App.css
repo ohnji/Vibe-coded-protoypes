@@ -121,6 +121,17 @@
 
 /* ---------- Custom chat input (matches Figma mock, not default Blueprint styling) ---------- */
 .wa-chat-input { border-top: 1px solid var(--wa-border); padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; flex: none; }
+.wa-chat-ask-context {
+  display: flex; align-items: center; gap: 6px;
+  border: 1px solid var(--wa-accent-light); border-radius: 20px;
+  background: rgba(138,187,255,0.1); color: var(--wa-accent-light);
+  font-size: 12px; padding: 5px 6px 5px 10px; align-self: flex-start;
+}
+.wa-chat-ask-context-clear {
+  width: 18px; height: 18px; flex: none; display: flex; align-items: center; justify-content: center;
+  border: none; border-radius: 50%; background: none; color: inherit; cursor: pointer; padding: 0;
+}
+.wa-chat-ask-context-clear:hover { background: rgba(138,187,255,0.2); }
 .wa-chat-box {
   display: flex; flex-direction: column; gap: 8px;
   border: 1px solid var(--wa-border-strong); border-radius: 8px;
@@ -185,6 +196,7 @@
   padding: 10px 10px 24px 10px !important; position: relative;
 }
 .wa-card.bp6-card:hover { border-color: var(--wa-accent-light); }
+.wa-card.bp6-card.is-ask-selected { border-color: var(--wa-accent-light); background: rgba(138,187,255,0.08) !important; }
 .wa-card-icon { color: var(--wa-accent-light) !important; flex: none; margin-top: 1px; }
 .wa-card-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; width: 100%; }
 .wa-card-title { font-size: 13px; color: #f6f7f9; }
@@ -288,6 +300,10 @@
   padding: 10px 12px; border: 1px solid var(--wa-border);
   border-radius: 6px; background: rgba(255,255,255,0.03);
   font-size: 13.5px; line-height: 20px;
+}
+.wa-chat-user-context {
+  display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+  color: var(--wa-accent-light); margin-bottom: 3px;
 }
 .wa-chat-agent { display: flex; flex-direction: column; }
 .wa-chat-agent .wa-agent-name { margin-bottom: 8px; }
@@ -546,17 +562,6 @@
 .iw-meta-row:hover { color: #f6f7f9; }
 .iw-meta-row .bp6-icon { color: var(--wa-text-faint); }
 
-/* ---------- Ask popup ---------- */
-.wa-ask-panel { width: 280px; padding: 12px; background: #16324f; border-radius: 4px; position: relative; }
-.wa-ask-head { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; margin-bottom: 8px; }
-.wa-ask-panel .bp6-input { background: rgba(255,255,255,0.05); border: 1px solid var(--wa-border-strong); color: #f6f7f9; font-size: 13px; padding-right: 34px; }
-.wa-ask-send {
-  position: absolute; right: 18px; bottom: 18px; width: 24px; height: 24px;
-  border: none; border-radius: 5px; background: var(--wa-accent-light); color: #14171c;
-  display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
-}
-.wa-ask-send:hover { background: #a7cbff; }
-
 /* ---------- Handover Log dashboard ---------- */
 .hl-dashboard { flex: 1; min-width: 0; padding: 20px 24px; overflow-y: auto; background: var(--wa-bg); }
 
@@ -592,6 +597,7 @@
   cursor: default; padding-top: 10px; padding-bottom: 10px;
 }
 button.hl-row:hover { background: rgba(138,187,255,0.05); }
+button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: inset 2px 0 0 var(--wa-accent-light); }
 .hl-col-block { display: flex; flex-direction: column; gap: 2px; }
 .hl-block-time { font-weight: 600; }
 .hl-block-date { font-size: 11px; color: var(--wa-text-faint); }

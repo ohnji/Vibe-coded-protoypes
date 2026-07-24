@@ -77,11 +77,11 @@ const STATUS_STYLE = {
   Scheduled: { intent: 'neutral', icon: 'calendar' },
 }
 
-function rowMenu(entry, toast, onInspect) {
-  const target = { id: entry.id, kind: 'HANDOVER LOG' }
+function rowMenu(entry, toast, onInspect, onAskOpen, rowKey) {
+  const target = { id: entry.id, kind: 'HANDOVER LOG', label: `Shift block ${entry.block}` }
   return (
     <Menu>
-      <MenuItem text="Ask workspace agent" icon="chat" onClick={() => toast(`Ask the workspace agent about ${entry.id}`)} />
+      <MenuItem text="Ask workspace agent" icon="chat" onClick={() => onAskOpen(rowKey, target)} />
       <MenuItem text="Inspect" icon="search" onClick={() => onInspect?.(target)} />
       <MenuDivider />
       <MenuItem text="Open in Gaia" icon="globe" onClick={() => toast(`Opening in Gaia ${entry.id}`)} />
@@ -91,7 +91,7 @@ function rowMenu(entry, toast, onInspect) {
   )
 }
 
-export default function HandoverLog({ toast, onInspect }) {
+export default function HandoverLog({ toast, onInspect, askTarget, onAskOpen }) {
   return (
     <section className="hl-dashboard">
       <div className="hl-head">
@@ -129,28 +129,30 @@ export default function HandoverLog({ toast, onInspect }) {
         </div>
         {ENTRIES.map((e) => {
           const style = STATUS_STYLE[e.status]
+          const rowKey = `hl-${e.id}`
+          const isSelected = askTarget?.key === rowKey
           return (
-            <ContextMenu key={e.id} content={rowMenu(e, toast, onInspect)}>
-            <button
-              type="button"
-              className="hl-row"
-              onClick={() => toast(`Opening ${e.id} handover record`)}
-            >
-              <span className="hl-col-block">
-                <span className="hl-block-time">{e.block}</span>
-                <span className="hl-block-date">{e.date}</span>
-              </span>
-              <span className="hl-col-officer">{e.outgoing}</span>
-              <span className="hl-col-officer">{e.incoming}</span>
-              <span className="hl-col-time">{e.time}</span>
-              <span className="hl-col-status">
-                <Tag minimal round intent={style.intent === 'ok' ? 'success' : style.intent === 'danger' ? 'danger' : undefined} className={`hl-status hl-status-${style.intent}`}>
-                  <Icon icon={style.icon} size={11} />
-                  {e.status}
-                </Tag>
-              </span>
-              <span className="hl-col-note">{e.note}</span>
-            </button>
+            <ContextMenu key={e.id} content={rowMenu(e, toast, onInspect, onAskOpen, rowKey)}>
+              <button
+                type="button"
+                className={`hl-row ${isSelected ? 'is-ask-selected' : ''}`}
+                onClick={() => toast(`Opening ${e.id} handover record`)}
+              >
+                <span className="hl-col-block">
+                  <span className="hl-block-time">{e.block}</span>
+                  <span className="hl-block-date">{e.date}</span>
+                </span>
+                <span className="hl-col-officer">{e.outgoing}</span>
+                <span className="hl-col-officer">{e.incoming}</span>
+                <span className="hl-col-time">{e.time}</span>
+                <span className="hl-col-status">
+                  <Tag minimal round intent={style.intent === 'ok' ? 'success' : style.intent === 'danger' ? 'danger' : undefined} className={`hl-status hl-status-${style.intent}`}>
+                    <Icon icon={style.icon} size={11} />
+                    {e.status}
+                  </Tag>
+                </span>
+                <span className="hl-col-note">{e.note}</span>
+              </button>
             </ContextMenu>
           )
         })}
