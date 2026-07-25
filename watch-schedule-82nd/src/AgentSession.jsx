@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Icon } from '@blueprintjs/core'
-import { SparkleIcon } from './icons'
+import { AgentAvatar } from './icons'
 import { AGENT_REASONING } from './sessions'
 
 const GENERIC_REASONING = [
@@ -91,7 +91,7 @@ export default function AgentSession({ session, toast }) {
 
           <div className="as-reasoning">
             <div className="as-reasoning-label">
-              <SparkleIcon color="#ec9a3c" size={13} />
+              <AgentAvatar name={agent} size={14} />
               {agent.toUpperCase()}
             </div>
             {reasoning.map((step, i) => (

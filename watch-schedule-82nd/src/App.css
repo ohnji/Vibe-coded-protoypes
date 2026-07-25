@@ -1000,12 +1000,12 @@ button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: i
 }
 
 /* ---------- Agent session (chat tab in the main panel) ---------- */
-.as-session { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--wa-panel-bg); }
+.as-session { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--wa-panel-bg); }
 
 /* Scroll area is a bottom-aligned column: the thread's margin-top:auto pushes
    the conversation to the bottom, growing upward like a real chat. */
 .as-scroll { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; padding: 24px 20px; }
-.as-thread { width: 100%; max-width: 720px; margin: auto auto 0; display: flex; flex-direction: column; gap: 20px; }
+.as-thread { width: 100%; max-width: 840px; margin: auto auto 0; display: flex; flex-direction: column; gap: 20px; }
 
 .as-narrative { font-size: 14px; line-height: 22px; color: var(--wa-text-dim); margin: 0; white-space: pre-line; }
 
@@ -1013,7 +1013,7 @@ button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: i
 .as-reasoning { display: flex; flex-direction: column; gap: 2px; }
 .as-reasoning-label {
   display: flex; align-items: center; gap: 7px; margin-bottom: 6px;
-  font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: var(--wa-orange);
+  font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: var(--wa-text-dim);
 }
 .as-reason { display: flex; flex-direction: column; }
 .as-reason-row {
@@ -1065,7 +1065,7 @@ button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: i
 /* Session input */
 .as-input { flex: none; padding: 8px 20px 14px; }
 .as-input-box {
-  max-width: 720px; margin: 0 auto; border: 1px solid var(--wa-border-strong); border-radius: 14px;
+  max-width: 840px; margin: 0 auto; border: 1px solid var(--wa-border-strong); border-radius: 14px;
   background: var(--wa-col-bg); padding: 12px 14px;
 }
 .as-input-textarea {
@@ -1086,7 +1086,7 @@ button.hl-row.is-ask-selected { background: rgba(138,187,255,0.1); box-shadow: i
   border: none; border-radius: 7px; background: none; color: var(--wa-accent-light); cursor: pointer;
 }
 .as-input-send:hover { color: #a9caff; }
-.as-expiry { max-width: 720px; margin: 8px auto 0; text-align: center; font-size: 11.5px; color: var(--wa-text-faint); }
+.as-expiry { max-width: 840px; margin: 8px auto 0; text-align: center; font-size: 11.5px; color: var(--wa-text-faint); }
 
 /* ── Report document tab ──────────────────────────────────────────────────
    A light-themed document editor, deliberately contrasting with the dark

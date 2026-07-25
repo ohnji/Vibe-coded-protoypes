@@ -494,7 +494,7 @@ export default function App() {
   const [panelCollapsed, setPanelCollapsed] = useState(false)
   const [tabs, setTabs] = useState(DEFAULT_TABS)
   const [tab, setTab] = useState('handover')
-  const [pill, setPill] = useState('coverage')
+  const [pill, setPill] = useState(null)
   // The row/card currently selected for "Ask workspace agent" — { key, id, kind } | null.
   // Selecting one highlights it and routes the question through the main chat
   // input instead of an inline popover (inline positioning wasn't reliable).
@@ -752,7 +752,10 @@ export default function App() {
                         {t.kind === 'touchpoint' ? (
                           <DottedCircleIcon size={13} />
                         ) : t.kind === 'session' ? (
-                          <SparkleIcon size={13} color="#ec9a3c" />
+                          <AgentAvatar
+                            name={(t.session.handoff || [t.session.agent]).slice(-1)[0]}
+                            size={13}
+                          />
                         ) : t.kind === 'report' ? (
                           <Icon icon="document" />
                         ) : (
@@ -898,7 +901,7 @@ export default function App() {
             <div className="wa-pills">
               {['Coverage agent', 'Relief agent', 'Handover agent', 'Roster agent', 'Log writer'].map((name) => {
                 const id = name.toLowerCase().split(' ')[0]
-                const isRunning = id === 'coverage' || id === 'handover'
+                const isRunning = id === 'handover'
                 return (
                   <Button
                     key={name}
